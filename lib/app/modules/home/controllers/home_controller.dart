@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import '../../data/models/product_model.dart';
-import '../../data/services/api_service.dart';
+import 'package:deal_bridge_app/app/data/models/product_model.dart';
+import 'package:deal_bridge_app/app/data/services/api_service.dart';
 
 class HomeController extends GetxController {
   final ApiService _apiService = ApiService();

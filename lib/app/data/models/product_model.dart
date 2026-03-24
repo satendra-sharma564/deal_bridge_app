@@ -5,6 +5,9 @@ class ProductModel {
   final String category;
   final String image;
   final int clicks;
+  final String? description;
+  final String? affiliateLink;
+  final String? link;
 
   ProductModel({
     this.id,
@@ -13,6 +16,9 @@ class ProductModel {
     required this.category,
     required this.image,
     this.clicks = 0,
+    this.description,
+    this.affiliateLink,
+    this.link,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
@@ -22,6 +28,9 @@ class ProductModel {
         category: json['category'] ?? '',
         image: json['image'] ?? '',
         clicks: json['clicks'] ?? 0,
+        description: json['description'],
+        affiliateLink: json['affiliateLink'],
+        link: json['link'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -30,5 +39,8 @@ class ProductModel {
         'category': category,
         'image': image,
         'clicks': clicks,
+        'description': description,
+        'affiliateLink': affiliateLink,
+        'link': link,
       };
 }

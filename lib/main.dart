@@ -9,9 +9,10 @@ void main() {
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
       theme: ThemeData(
+        fontFamily: 'Inter', // Optional, nice fallback
         primarySwatch: Colors.blue,
         scaffoldBackgroundColor: Colors.grey[100],
-        appBarTheme: AppBarTheme(
+        appBarTheme: const AppBarTheme(
           elevation: 0,
           backgroundColor: Colors.white,
           iconTheme: IconThemeData(color: Colors.black),

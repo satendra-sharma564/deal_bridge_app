@@ -1,0 +1,33 @@
+﻿Analyzing deal_bridge_app...
+
+  error - lib\app\modules\product_detail\view\product_detail_view.dart:79:29 - The getter 'description' isn't defined for the type 'ProductModel'. Try importing the library that defines 'description', correcting the name to the name of an existing getter, or defining a getter or field named 'description'. - undefined_getter
+  error - test\widget_test.dart:16:35 - The name 'MyApp' isn't a class. Try correcting the name to match an existing class. - creation_with_non_type
+warning - lib\app\data\services\api_service.dart:3:8 - Unused import: 'package:flutter/foundation.dart'. Try removing the import directive. - unused_import
+warning - lib\app\modules\home\views\home_view.dart:4:8 - Unused import: '../../admin/views/admin_dashboard.dart'. Try removing the import directive. - unused_import
+warning - lib\app\modules\home\views\widghts\product_grid.dart:5:8 - Unused import: 'package:deal_bridge_app/app/modules/product_detail/view/product_detail_view.dart'. Try removing the import directive. - unused_import
+warning - test\widget_test.dart:11:8 - Unused import: 'package:deal_bridge_app/main.dart'. Try removing the import directive. - unused_import
+   info - lib\app\data\services\api_service.dart:17:7 - Don't invoke 'print' in production code. Try using a logging framework. - avoid_print
+   info - lib\app\modules\admin\views\add_product_view.dart:15:13 - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation. - prefer_const_constructors
+   info - lib\app\modules\admin\views\add_product_view.dart:15:35 - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation. - prefer_const_constructors
+   info - lib\app\modules\admin\views\add_product_view.dart:16:13 - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation. - prefer_const_constructors
+   info - lib\app\modules\admin\views\add_product_view.dart:17:14 - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation. - prefer_const_constructors
+   info - lib\app\modules\admin\views\add_product_view.dart:17:36 - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation. - prefer_const_constructors
+   info - lib\app\modules\admin\views\add_product_view.dart:18:13 - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation. - prefer_const_constructors
+   info - lib\app\modules\admin\views\add_product_view.dart:19:14 - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation. - prefer_const_constructors
+   info - lib\app\modules\admin\views\add_product_view.dart:19:36 - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation. - prefer_const_constructors
+   info - lib\app\modules\admin\views\add_product_view.dart:20:13 - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation. - prefer_const_constructors
+   info - lib\app\modules\admin\views\add_product_view.dart:21:14 - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation. - prefer_const_constructors
+   info - lib\app\modules\admin\views\add_product_view.dart:21:36 - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation. - prefer_const_constructors
+   info - lib\app\modules\admin\views\add_product_view.dart:22:13 - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation. - prefer_const_constructors
+   info - lib\app\modules\admin\views\add_product_view.dart:28:22 - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation. - prefer_const_constructors
+   info - lib\app\modules\product_detail\controllers\product_detail_controller.dart:5:8 - Unnecessary override. Try adding behavior in the overriding member or removing the override. - unnecessary_overrides
+   info - lib\app\routes\app_pages.dart:11:16 - The constant name 'INITIAL' isn't a lowerCamelCase identifier. Try changing the name to follow the lowerCamelCase style. - constant_identifier_names
+   info - lib\app\routes\app_routes.dart:4:16 - The constant name 'HOME' isn't a lowerCamelCase identifier. Try changing the name to follow the lowerCamelCase style. - constant_identifier_names
+   info - lib\app\routes\app_routes.dart:5:16 - The constant name 'ADMIN' isn't a lowerCamelCase identifier. Try changing the name to follow the lowerCamelCase style. - constant_identifier_names
+   info - lib\app\routes\app_routes.dart:6:16 - The constant name 'ADD_PRODUCT' isn't a lowerCamelCase identifier. Try changing the name to follow the lowerCamelCase style. - constant_identifier_names
+   info - lib\app\routes\app_routes.dart:7:16 - The constant name 'PRODUCT_DETAIL' isn't a lowerCamelCase identifier. Try changing the name to follow the lowerCamelCase style. - constant_identifier_names
+   info - lib\main.dart:14:22 - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation. - prefer_const_constructors
+   info - lib\main.dart:17:22 - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation. - prefer_const_constructors
+   info - lib\main.dart:18:27 - Use 'const' with the constructor to improve performance. Try adding the 'const' keyword to the constructor invocation. - prefer_const_constructors
+
+29 issues found.

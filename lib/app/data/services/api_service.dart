@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart';
 import '../models/product_model.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://10.0.2.2:5000/api';
+  static const String baseUrl = 'https://dealbridge-backend.onrender.com/api';
 
   Future<List<ProductModel>> getProducts() async {
     try {
