@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../controllers/home_controller.dart';
 import '../../admin/views/admin_dashboard.dart';
 import 'widghts/product_grid.dart';
@@ -17,7 +18,7 @@ class HomeView extends GetView<HomeController> {
         elevation: 0,
         centerTitle: false,
         title: const Text(
-          'DealBridge',
+          'Dealora',
           style: TextStyle(
             fontWeight: FontWeight.w900,
             fontSize: 24,
@@ -31,7 +32,8 @@ class HomeView extends GetView<HomeController> {
             child: CircleAvatar(
               backgroundColor: const Color(0xFFF0EDFF),
               child: IconButton(
-                icon: const Icon(Icons.admin_panel_settings, color: Color(0xFF6B4EFF)),
+                icon: const Icon(Icons.admin_panel_settings,
+                    color: Color(0xFF6B4EFF)),
                 onPressed: () => Get.toNamed('/admin'),
               ),
             ),
@@ -50,6 +52,49 @@ class HomeView extends GetView<HomeController> {
                   fontWeight: FontWeight.w800,
                   color: Color(0xFF1E212D),
                   letterSpacing: -0.5,
+                ),
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.black.withOpacity(0.04),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4)),
+                    ]),
+                child: TextField(
+                  decoration: const InputDecoration(
+                    hintText: 'Search Amazon for products...',
+                    hintStyle: TextStyle(color: Color(0xFFB0B3C6)),
+                    prefixIcon: Icon(Icons.search, color: Color(0xFF6B4EFF)),
+                    border: InputBorder.none,
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  ),
+                  textInputAction: TextInputAction.search,
+                  onSubmitted: (query) async {
+                    if (query.trim().isNotEmpty) {
+                      // Change 'dealbridge0d-21' to your actual Amazon affiliate ID
+                      const String affiliateTag = 'dealbridge0d-21';
+                      final Uri url = Uri.parse(
+                          'https://www.amazon.in/s?k=${Uri.encodeComponent(query)}&tag=$affiliateTag');
+                      if (await canLaunchUrl(url)) {
+                        await launchUrl(
+                          url,
+                          mode: LaunchMode.inAppBrowserView,
+                        );
+                      } else {
+                        Get.snackbar('Error', 'Could not open Amazon search');
+                      }
+                    }
+                  },
                 ),
               ),
             ),

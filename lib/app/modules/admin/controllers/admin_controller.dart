@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:deal_bridge_app/app/data/models/product_model.dart';
 import 'package:deal_bridge_app/app/data/services/api_service.dart';
@@ -18,12 +19,53 @@ class AdminController extends GetxController {
       isLoading(true);
       var products = await _apiService.getProducts();
       productList.assignAll(products);
+
+      // Fetch analytics from backend
+      int clicks = await _apiService.fetchAnalyticsTotalClicks();
+      _totalClicksData.value = clicks;
     } finally {
       isLoading(false);
     }
   }
   
-  int get totalClicks {
-    return productList.fold(0, (sum, item) => sum + item.clicks);
+  var _totalClicksData = 0.obs;
+  int get totalClicks => _totalClicksData.value;
+
+  var isSaving = false.obs;
+
+  Future<bool> addProduct(Map<String, dynamic> productData) async {
+    isSaving(true);
+    try {
+      bool success = await _apiService.addProduct(productData);
+      if (success) {
+        fetchProducts(); // Refresh the product list
+      }
+      return success;
+    } finally {
+      isSaving(false);
+    }
+  }
+
+  Future<bool> updateProduct(String id, Map<String, dynamic> productData) async {
+    isSaving(true);
+    try {
+      bool success = await _apiService.updateProduct(id, productData);
+      if (success) {
+        fetchProducts();
+      }
+      return success;
+    } finally {
+      isSaving(false);
+    }
+  }
+
+  Future<void> deleteProduct(String id) async {
+    bool success = await _apiService.deleteProduct(id);
+    if (success) {
+      Get.snackbar('Deleted', 'Product has been removed.', backgroundColor: const Color(0xFF4CAF50), colorText: const Color(0xFFFFFFFF));
+      fetchProducts();
+    } else {
+      Get.snackbar('Error', 'Failed to delete product.', backgroundColor: const Color(0xFFE53935), colorText: const Color(0xFFFFFFFF));
+    }
   }
 }

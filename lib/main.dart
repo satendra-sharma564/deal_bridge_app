@@ -8,6 +8,10 @@ void main() {
       title: 'Deal Bridge',
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
+
+      // initialRoute: Routes.ADMIN,
+      // getPages: AppPages.routes,
+
       theme: ThemeData(
         fontFamily: 'Inter', // Optional, nice fallback
         primarySwatch: Colors.blue,
@@ -16,7 +20,8 @@ void main() {
           elevation: 0,
           backgroundColor: Colors.white,
           iconTheme: IconThemeData(color: Colors.black),
-          titleTextStyle: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
+          titleTextStyle: TextStyle(
+              color: Colors.black, fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),
       debugShowCheckedModeBanner: false,
