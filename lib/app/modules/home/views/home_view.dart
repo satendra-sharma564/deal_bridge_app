@@ -1,3 +1,5 @@
+import 'package:deal_bridge_app/app/modules/home/views/widghts/platform_buttons.dart';
+import 'package:deal_bridge_app/app/modules/home/views/widghts/platform_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -105,6 +107,18 @@ class HomeView extends GetView<HomeController> {
               child: CategoryWidget(),
             ),
           ),
+          SliverPadding(
+            padding: const EdgeInsets.only(top: 16.0, bottom: 24.0),
+            sliver: SliverToBoxAdapter(child: PlatformGrid()),
+          ),
+          const SliverPadding(
+            padding: EdgeInsets.only(top: 16.0, bottom: 24.0),
+            sliver: PlatformButtons(),
+          ),
+          // SliverPadding(
+          //   padding: const EdgeInsets.only(top: 16.0, bottom: 24.0),
+          //   sliver: ,
+          // ),
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             sliver: Obx(() {

@@ -1,3 +1,4 @@
+import 'package:deal_bridge_app/app/modules/admin/views/platform_add.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -31,12 +32,36 @@ class AdminDashboardView extends GetView<AdminController> {
               child: ElevatedButton.icon(
                 onPressed: () => Get.to(() => const AddProductView()),
                 icon: const Icon(Icons.add, size: 20, color: Colors.white),
-                label: const Text('Add Product', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                label: const Text('Add Product',
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold)),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF6B4EFF),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
                   elevation: 0,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: Center(
+              child: ElevatedButton.icon(
+                onPressed: () => Get.to(() => AddPlatformScreen()),
+                icon: const Icon(Icons.add, size: 20, color: Colors.white),
+                label: const Text('Add Platform',
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF6B4EFF),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  elevation: 0,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 ),
               ),
             ),
@@ -45,7 +70,8 @@ class AdminDashboardView extends GetView<AdminController> {
       ),
       body: Obx(() {
         if (controller.isLoading.value) {
-          return const Center(child: CircularProgressIndicator(color: Color(0xFF6B4EFF)));
+          return const Center(
+              child: CircularProgressIndicator(color: Color(0xFF6B4EFF)));
         }
         return RefreshIndicator(
           onRefresh: () async {
@@ -93,7 +119,11 @@ class AdminDashboardView extends GetView<AdminController> {
                 sliver: SliverToBoxAdapter(
                   child: Text(
                     'Product Overview',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: Color(0xFF1E212D), letterSpacing: -0.5),
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800,
+                        color: Color(0xFF1E212D),
+                        letterSpacing: -0.5),
                   ),
                 ),
               ),
@@ -111,15 +141,18 @@ class AdminDashboardView extends GetView<AdminController> {
                       final p = controller.productList[index];
                       return Container(
                         decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 10, offset: const Offset(0, 4)),
-                          ]
-                        ),
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.black.withOpacity(0.03),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 4)),
+                            ]),
                         child: Center(
                           child: ListTile(
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
                             leading: ClipRRect(
                               borderRadius: BorderRadius.circular(12),
                               child: SizedBox(
@@ -128,7 +161,10 @@ class AdminDashboardView extends GetView<AdminController> {
                                 child: CachedNetworkImage(
                                   imageUrl: p.image,
                                   fit: BoxFit.cover,
-                                  errorWidget: (context, url, err) => Container(color: Colors.grey[100], child: const Icon(Icons.broken_image, color: Colors.grey)),
+                                  errorWidget: (context, url, err) => Container(
+                                      color: Colors.grey[100],
+                                      child: const Icon(Icons.broken_image,
+                                          color: Colors.grey)),
                                 ),
                               ),
                             ),
@@ -136,20 +172,27 @@ class AdminDashboardView extends GetView<AdminController> {
                               p.title,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFF1E212D)),
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: Color(0xFF1E212D)),
                             ),
                             subtitle: Padding(
                               padding: const EdgeInsets.only(top: 4.0),
                               child: Text(
                                 '₹${p.price.toStringAsFixed(2)} • ${p.category}',
-                                style: TextStyle(color: Colors.grey[600], fontWeight: FontWeight.w500, fontSize: 13),
+                                style: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 13),
                               ),
                             ),
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 8),
                                   decoration: BoxDecoration(
                                     color: const Color(0xFFF0EDFF),
                                     borderRadius: BorderRadius.circular(20),
@@ -157,11 +200,15 @@ class AdminDashboardView extends GetView<AdminController> {
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      const Icon(Icons.touch_app_rounded, size: 14, color: Color(0xFF6B4EFF)),
+                                      const Icon(Icons.touch_app_rounded,
+                                          size: 14, color: Color(0xFF6B4EFF)),
                                       const SizedBox(width: 4),
                                       Text(
                                         '${p.clicks}',
-                                        style: const TextStyle(color: Color(0xFF6B4EFF), fontWeight: FontWeight.bold, fontSize: 14),
+                                        style: const TextStyle(
+                                            color: Color(0xFF6B4EFF),
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14),
                                       ),
                                     ],
                                   ),
@@ -170,18 +217,22 @@ class AdminDashboardView extends GetView<AdminController> {
                                 IconButton(
                                   padding: EdgeInsets.zero,
                                   constraints: const BoxConstraints(),
-                                  icon: const Icon(Icons.edit_rounded, color: Colors.blueAccent, size: 22),
-                                  onPressed: () => Get.to(() => AddProductView(productToEdit: p)),
+                                  icon: const Icon(Icons.edit_rounded,
+                                      color: Colors.blueAccent, size: 22),
+                                  onPressed: () => Get.to(
+                                      () => AddProductView(productToEdit: p)),
                                 ),
                                 const SizedBox(width: 8),
                                 IconButton(
                                   padding: EdgeInsets.zero,
                                   constraints: const BoxConstraints(),
-                                  icon: const Icon(Icons.delete_rounded, color: Colors.redAccent, size: 22),
+                                  icon: const Icon(Icons.delete_rounded,
+                                      color: Colors.redAccent, size: 22),
                                   onPressed: () {
                                     Get.defaultDialog(
                                       title: 'Delete Product',
-                                      middleText: 'Are you sure you want to delete ${p.title}?',
+                                      middleText:
+                                          'Are you sure you want to delete ${p.title}?',
                                       textConfirm: 'Delete',
                                       textCancel: 'Cancel',
                                       confirmTextColor: Colors.white,
@@ -189,7 +240,8 @@ class AdminDashboardView extends GetView<AdminController> {
                                       cancelTextColor: Colors.black,
                                       onConfirm: () {
                                         Get.back();
-                                        if (p.id != null) controller.deleteProduct(p.id!);
+                                        if (p.id != null)
+                                          controller.deleteProduct(p.id!);
                                       },
                                     );
                                   },
@@ -242,12 +294,20 @@ class AdminDashboardView extends GetView<AdminController> {
             child: Icon(icon, color: Colors.white, size: 28),
           ),
           const SizedBox(height: 20),
-          Text(value, style: const TextStyle(color: Colors.white, fontSize: 36, fontWeight: FontWeight.w900, letterSpacing: -1)),
+          Text(value,
+              style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 36,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: -1)),
           const SizedBox(height: 4),
-          Text(title, style: TextStyle(color: Colors.white.withOpacity(0.9), fontSize: 15, fontWeight: FontWeight.w600)),
+          Text(title,
+              style: TextStyle(
+                  color: Colors.white.withOpacity(0.9),
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600)),
         ],
       ),
     );
   }
 }
-

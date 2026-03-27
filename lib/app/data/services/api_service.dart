@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:deal_bridge_app/app/data/models/platform_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import '../models/product_model.dart';
@@ -48,7 +49,8 @@ class ApiService {
     return 0;
   }
 
-  Future<bool> updateProduct(String id, Map<String, dynamic> productData) async {
+  Future<bool> updateProduct(
+      String id, Map<String, dynamic> productData) async {
     try {
       final response = await http.put(
         Uri.parse('$baseUrl/products/$id'),
@@ -71,5 +73,59 @@ class ApiService {
     }
     return false;
   }
-}
 
+  Future<bool> addPlatform(Map<String, dynamic> data) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/platforms'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(data),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      }
+    } catch (e) {
+      print('Error adding platform: $e');
+    }
+    return false;
+  }
+
+  Future<List<PlatformModel>> getPlatforms() async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/platforms'));
+      if (response.statusCode == 200) {
+        Iterable json = jsonDecode(response.body);
+        return json.map((e) => PlatformModel.fromJson(e)).toList();
+      }
+    } catch (e) {
+      print('Error fetching products: $e');
+    }
+    return [];
+  }
+
+  Future<bool> updatePlatform(
+      String id, Map<String, dynamic> platformData) async {
+    try {
+      final response = await http.put(
+        Uri.parse('$baseUrl/platforms/$id'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(platformData),
+      );
+      if (response.statusCode == 200) return true;
+    } catch (e) {
+      print('Error updating platform: $e');
+    }
+    return false;
+  }
+
+  Future<bool> deletePlatform(String id) async {
+    try {
+      final response = await http.delete(Uri.parse('$baseUrl/platforms/$id'));
+      if (response.statusCode == 200) return true;
+    } catch (e) {
+      print('Error deleting platform: $e');
+    }
+    return false;
+  }
+}
