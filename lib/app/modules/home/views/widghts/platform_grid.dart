@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:deal_bridge_app/app/modules/admin/controllers/admin_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -21,7 +23,48 @@ class PlatformGrid extends StatelessWidget {
 
   Color hexToColor(String hex) {
     hex = hex.replaceAll("#", "");
-    return Color(int.parse("0xff$hex"));
+    if (hex.length == 6) hex = "ff$hex";
+    return Color(int.parse("0x$hex"));
+  }
+
+  /// Supports both network URLs and base64 data URIs
+  Widget buildLogoWidget(String logoUrl) {
+    if (logoUrl.startsWith('data:')) {
+      // base64 image stored in DB
+      try {
+        final base64Str = logoUrl.split(',').last;
+        final bytes = base64Decode(base64Str);
+        return Image.memory(
+          bytes,
+          fit: BoxFit.contain,
+          errorBuilder: (_, __, ___) =>
+              const Icon(Icons.store_rounded, size: 40, color: Color(0xFF6B4EFF)),
+        );
+      } catch (_) {
+        return const Icon(Icons.store_rounded, size: 40, color: Color(0xFF6B4EFF));
+      }
+    }
+    // Regular network URL
+    return CachedNetworkImage(
+      imageUrl: logoUrl,
+      fit: BoxFit.contain,
+      httpHeaders: const {
+        'User-Agent':
+            'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36',
+      },
+      placeholder: (context, url) => const Center(
+        child: SizedBox(
+          width: 24,
+          height: 24,
+          child: CircularProgressIndicator(
+            strokeWidth: 2,
+            color: Color(0xFF6B4EFF),
+          ),
+        ),
+      ),
+      errorWidget: (context, url, error) =>
+          const Icon(Icons.store_rounded, size: 40, color: Color(0xFF6B4EFF)),
+    );
   }
 
   @override
@@ -31,6 +74,10 @@ class PlatformGrid extends StatelessWidget {
     return Obx(() {
       if (controller.isLoading.value) {
         return const Center(child: CircularProgressIndicator());
+      }
+
+      if (controller.platformList.isEmpty) {
+        return const SizedBox.shrink();
       }
 
       return GridView.builder(
@@ -47,6 +94,7 @@ class PlatformGrid extends StatelessWidget {
 
           return InkWell(
             onTap: () => openLink(item.link),
+            borderRadius: BorderRadius.circular(16),
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -56,16 +104,15 @@ class PlatformGrid extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.network(
-                    item.logo,
-                    height: 40,
-                    errorBuilder: (_, __, ___) =>
-                        const Icon(Icons.store, size: 40),
-                  ),
+                  Expanded(child: buildLogoWidget(item.logo)),
                   const SizedBox(height: 10),
                   Text(
                     item.name,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                    ),
                   )
                 ],
               ),

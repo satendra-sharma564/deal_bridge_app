@@ -20,66 +20,57 @@ class PlatformButtons extends StatelessWidget {
     final platforms = [
       {
         "name": "Myntra",
-        "logo":
-            "https://upload.wikimedia.org/wikipedia/commons/0/0d/Myntra_logo.png",
+        "logo": "https://logo.clearbit.com/myntra.com",
         "link": "https://myntr.it/I2w661u",
         "color": Colors.pink.shade50,
       },
       {
         "name": "Ajio",
-        "logo":
-            "https://upload.wikimedia.org/wikipedia/commons/2/2a/Ajio-Logo.png",
+        "logo": "https://logo.clearbit.com/ajio.com",
         "link": "https://ajiio.in/HR7e33a",
         "color": Colors.grey.shade100,
       },
       {
         "name": "Flipkart",
-        "logo":
-            "https://upload.wikimedia.org/wikipedia/commons/f/f1/Flipkart-logo.png",
+        "logo": "https://logo.clearbit.com/flipkart.com",
         "link": "https://fktr.in/l4NUzGg",
-        "color": Colors.grey.shade100,
+        "color": Colors.blue.shade50,
       },
       {
         "name": "Bitli",
-        "logo":
-            "https://upload.wikimedia.org/wikipedia/commons/f/f1/Flipkart-logo.png",
+        "logo": "https://logo.clearbit.com/bitly.com",
         "link": "https://bitli.in/7ayDprU",
         "color": Colors.grey.shade100,
       },
       {
         "name": "KIMTI",
-        "logo":
-            "https://upload.wikimedia.org/wikipedia/commons/f/f1/Flipkart-logo.png",
+        "logo": "https://logo.clearbit.com/meesho.com",
         "link": "https://bitli.in/tYJi64g",
-        "color": Colors.grey.shade100,
+        "color": Colors.pink.shade50,
       },
       {
-        "name": "Reliance digital",
-        "logo":
-            "https://upload.wikimedia.org/wikipedia/commons/f/f1/Flipkart-logo.png",
+        "name": "Reliance Digital",
+        "logo": "https://logo.clearbit.com/reliancedigital.in",
         "link": "https://bitli.in/79N57YE",
-        "color": Colors.grey.shade100,
+        "color": Colors.red.shade50,
       },
       {
-        "name": "The Derma co",
-        "logo":
-            "https://upload.wikimedia.org/wikipedia/commons/0/0d/Myntra_logo.png",
+        "name": "The Derma Co",
+        "logo": "https://logo.clearbit.com/thedermacompany.com",
         "link": "https://bitli.in/0eaayRI",
-        "color": Colors.grey.shade100,
+        "color": Colors.lightBlue.shade50,
       },
       {
         "name": "Neuro",
-        "logo":
-            "https://upload.wikimedia.org/wikipedia/commons/0/0d/Myntra_logo.png",
+        "logo": "https://logo.clearbit.com/neurogum.com",
         "link": "https://bitli.in/M8j8i9K",
         "color": Colors.grey.shade100,
       },
       {
         "name": "Goibibo",
-        "logo":
-            "https://upload.wikimedia.org/wikipedia/commons/0/0d/Myntra_logo.png",
+        "logo": "https://logo.clearbit.com/goibibo.com",
         "link": "https://bitli.in/97FWoodI",
-        "color": Colors.grey.shade100,
+        "color": Colors.teal.shade50,
       },
     ];
 
@@ -125,6 +116,10 @@ class PlatformButtons extends StatelessWidget {
                       child: CachedNetworkImage(
                         imageUrl: item['logo'] as String,
                         fit: BoxFit.contain,
+                        httpHeaders: const {
+                          'User-Agent':
+                              'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36',
+                        },
                         errorWidget: (context, url, error) =>
                             const Icon(Icons.image, size: 40),
                       ),
