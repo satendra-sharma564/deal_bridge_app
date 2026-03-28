@@ -5,7 +5,7 @@ import '../../../data/services/version_service.dart';
 import '../../../routes/app_pages.dart';
 
 /// Current installed app version — must match pubspec.yaml version string
-const String kAppVersion = '1.0.0'; // ← Update this every time you release new APK
+const String kAppVersion = '1.0.1'; // ← Update this every time you release new APK
 
 class SplashController extends GetxController {
   final RxBool isChecking = true.obs;
@@ -33,86 +33,92 @@ class SplashController extends GetxController {
   void _showForceUpdateDialog(VersionCheckResult result) {
     Get.dialog(
       WillPopScope(
-        // Prevent back button from dismissing
         onWillPop: () async => false,
-        child: AlertDialog(
+        child: Dialog(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           backgroundColor: Colors.white,
-          title: Row(
-            children: const [
-              Icon(Icons.system_update_alt_rounded, color: Color(0xFF6B4EFF), size: 28),
-              SizedBox(width: 10),
-              Text(
-                'Update Required',
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 20,
-                  color: Color(0xFF1E212D),
-                ),
-              ),
-            ],
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                result.message,
-                style: const TextStyle(
-                  fontSize: 15,
-                  color: Color(0xFF5A5F7D),
-                  height: 1.5,
-                ),
-              ),
-              const SizedBox(height: 12),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF0EDFF),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.info_outline, color: Color(0xFF6B4EFF), size: 16),
-                    const SizedBox(width: 8),
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Title
+                Row(
+                  children: const [
+                    Icon(Icons.system_update_alt_rounded,
+                        color: Color(0xFF6B4EFF), size: 28),
+                    SizedBox(width: 10),
                     Text(
-                      'New version: v${result.latestVersion}',
-                      style: const TextStyle(
-                        color: Color(0xFF6B4EFF),
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13,
+                      'Update Required',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 20,
+                        color: Color(0xFF1E212D),
                       ),
                     ),
                   ],
                 ),
-              ),
-            ],
-          ),
-          actions: [
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: () => _downloadUpdate(result.apkUrl),
-                icon: const Icon(Icons.download_rounded, color: Colors.white),
-                label: const Text(
-                  'Update Karo',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w700,
+                const SizedBox(height: 16),
+                // Message
+                Text(
+                  result.message,
+                  style: const TextStyle(
                     fontSize: 15,
+                    color: Color(0xFF5A5F7D),
+                    height: 1.5,
                   ),
                 ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF6B4EFF),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  elevation: 0,
+                const SizedBox(height: 12),
+                // Version badge
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF0EDFF),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.info_outline,
+                          color: Color(0xFF6B4EFF), size: 16),
+                      const SizedBox(width: 8),
+                      Text(
+                        'New version: v${result.latestVersion}',
+                        style: const TextStyle(
+                          color: Color(0xFF6B4EFF),
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+                const SizedBox(height: 24),
+                // Full-width button — safe inside Column with crossAxisAlignment.stretch
+                ElevatedButton.icon(
+                  onPressed: () => _downloadUpdate(result.apkUrl),
+                  icon: const Icon(Icons.download_rounded, color: Colors.white),
+                  label: const Text(
+                    'Update Karo',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF6B4EFF),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                    elevation: 0,
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
       barrierDismissible: false,
