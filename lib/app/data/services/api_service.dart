@@ -150,4 +150,57 @@ class ApiService {
     }
     return false;
   }
+
+  // ── Categories ───────────────────────────────────────────
+  Future<List<dynamic>> getCategories() async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/categories'));
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      }
+    } catch (e) {
+      print('Error fetching categories: $e');
+    }
+    return [];
+  }
+
+  Future<bool> addCategory(String name) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/categories'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'name': name}),
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      }
+    } catch (e) {
+      print('Error adding category: $e');
+    }
+    return false;
+  }
+
+  Future<bool> updateCategory(String id, String name) async {
+    try {
+      final response = await http.put(
+        Uri.parse('$baseUrl/categories/$id'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'name': name}),
+      );
+      if (response.statusCode == 200) return true;
+    } catch (e) {
+      print('Error updating category: $e');
+    }
+    return false;
+  }
+
+  Future<bool> deleteCategory(String id) async {
+    try {
+      final response = await http.delete(Uri.parse('$baseUrl/categories/$id'));
+      if (response.statusCode == 200) return true;
+    } catch (e) {
+      print('Error deleting category: $e');
+    }
+    return false;
+  }
 }

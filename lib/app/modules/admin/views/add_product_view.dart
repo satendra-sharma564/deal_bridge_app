@@ -15,14 +15,7 @@ class AddProductView extends StatefulWidget {
 class _AddProductViewState extends State<AddProductView> {
   final AdminController controller = Get.find<AdminController>();
 
-  final List<String> _predefinedCategories = [
-    'Electronics',
-    'Mobiles',
-    'Clothing',
-    'Home',
-    'Custom'
-  ];
-  String _selectedDropCategory = 'Electronics';
+  String? _selectedDropCategory;
 
   late final TextEditingController _titleCtrl;
   late final TextEditingController _priceCtrl;
@@ -37,11 +30,18 @@ class _AddProductViewState extends State<AddProductView> {
 
     String initialCustomCat = '';
     if (p != null && p.category.isNotEmpty) {
-      if (_predefinedCategories.contains(p.category)) {
+      final exists = controller.categoryList.any((c) => c.name == p.category);
+      if (exists) {
         _selectedDropCategory = p.category;
       } else {
         _selectedDropCategory = 'Custom';
         initialCustomCat = p.category;
+      }
+    } else {
+      if (controller.categoryList.isNotEmpty) {
+        _selectedDropCategory = controller.categoryList.first.name;
+      } else {
+        _selectedDropCategory = 'Custom';
       }
     }
 
@@ -72,7 +72,7 @@ class _AddProductViewState extends State<AddProductView> {
 
     final finalCategory = _selectedDropCategory == 'Custom'
         ? _catCtrl.text.trim()
-        : _selectedDropCategory;
+        : (_selectedDropCategory ?? '');
 
     if (finalCategory.isEmpty) {
       Get.snackbar('Error', 'Category cannot be empty!',
@@ -172,33 +172,47 @@ class _AddProductViewState extends State<AddProductView> {
                     controller: _descCtrl),
                 const SizedBox(height: 20),
                 _buildSectionTitle('Product Category'),
-                DropdownButtonFormField<String>(
-                  value: _selectedDropCategory,
-                  items: _predefinedCategories
-                      .map((c) => DropdownMenuItem(value: c, child: Text(c)))
-                      .toList(),
-                  onChanged: (val) {
-                    if (val != null) {
-                      setState(() {
-                        _selectedDropCategory = val;
-                      });
-                    }
-                  },
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.category_rounded,
-                        color: const Color(0xFF6B4EFF).withOpacity(0.7)),
-                    filled: true,
-                    fillColor: const Color(0xFFF9FAFF),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 16),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide.none),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        borderSide: const BorderSide(
-                            color: Color(0xFF6B4EFF), width: 1.5)),
-                  ),
-                ),
+                Obx(() {
+                  final catNames = controller.categoryList.map((c) => c.name).toList();
+                  if (!catNames.contains('Custom')) {
+                    catNames.add('Custom');
+                  }
+                  
+                  // Ensure current selection is valid
+                  if (_selectedDropCategory != null && !catNames.contains(_selectedDropCategory)) {
+                    _selectedDropCategory = 'Custom';
+                  } else if (_selectedDropCategory == null && catNames.isNotEmpty) {
+                    _selectedDropCategory = catNames.first;
+                  }
+
+                  return DropdownButtonFormField<String>(
+                    value: _selectedDropCategory,
+                    items: catNames
+                        .map((c) => DropdownMenuItem(value: c, child: Text(c)))
+                        .toList(),
+                    onChanged: (val) {
+                      if (val != null) {
+                        setState(() {
+                          _selectedDropCategory = val;
+                        });
+                      }
+                    },
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.category_rounded,
+                          color: const Color(0xFF6B4EFF).withOpacity(0.7)),
+                      filled: true,
+                      fillColor: const Color(0xFFF9FAFF),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 16),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: BorderSide.none),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: const BorderSide(
+                              color: Color(0xFF6B4EFF), width: 1.5)),
+                    ),
+                  );
+                }),
                 if (_selectedDropCategory == 'Custom') ...[
                   const SizedBox(height: 12),
                   _buildTextField(

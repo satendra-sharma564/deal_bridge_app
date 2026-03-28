@@ -1,4 +1,5 @@
 import 'package:deal_bridge_app/app/modules/admin/views/platform_add.dart';
+import 'package:deal_bridge_app/app/modules/admin/views/category_manager_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -26,46 +27,52 @@ class AdminDashboardView extends GetView<AdminController> {
           ),
         ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: Center(
-              child: ElevatedButton.icon(
-                onPressed: () => Get.to(() => const AddProductView()),
-                icon: const Icon(Icons.add, size: 20, color: Colors.white),
-                label: const Text('Add Product',
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold)),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF6B4EFF),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  elevation: 0,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.menu_rounded, color: Color(0xFF1E212D)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            onSelected: (value) {
+              if (value == 'category') {
+                Get.to(() => CategoryManagerView());
+              } else if (value == 'product') {
+                Get.to(() => const AddProductView());
+              } else if (value == 'platform') {
+                Get.to(() => AddPlatformView());
+              }
+            },
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 'category',
+                child: Row(
+                  children: const [
+                    Icon(Icons.category, color: Color(0xFF6B4EFF), size: 20),
+                    SizedBox(width: 12),
+                    Text('Manage Categories', style: TextStyle(fontWeight: FontWeight.w600)),
+                  ],
                 ),
               ),
-            ),
+              PopupMenuItem(
+                value: 'product',
+                child: Row(
+                  children: const [
+                    Icon(Icons.inventory_2, color: Color(0xFF6B4EFF), size: 20),
+                    SizedBox(width: 12),
+                    Text('Add Product', style: TextStyle(fontWeight: FontWeight.w600)),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
+                value: 'platform',
+                child: Row(
+                  children: const [
+                    Icon(Icons.storefront, color: Color(0xFF6B4EFF), size: 20),
+                    SizedBox(width: 12),
+                    Text('Add Platform', style: TextStyle(fontWeight: FontWeight.w600)),
+                  ],
+                ),
+              ),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: Center(
-              child: ElevatedButton.icon(
-                onPressed: () => Get.to(() => AddPlatformView()),
-                icon: const Icon(Icons.add, size: 20, color: Colors.white),
-                label: const Text('Add Platform',
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold)),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF6B4EFF),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  elevation: 0,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                ),
-              ),
-            ),
-          )
+          const SizedBox(width: 8),
         ],
       ),
       body: Obx(() {

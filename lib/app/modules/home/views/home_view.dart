@@ -71,18 +71,21 @@ class HomeView extends GetView<HomeController> {
                           offset: const Offset(0, 4)),
                     ]),
                 child: TextField(
-                  decoration: const InputDecoration(
-                    hintText: 'Search Amazon for products...',
-                    hintStyle: TextStyle(color: Color(0xFFB0B3C6)),
-                    prefixIcon: Icon(Icons.search, color: Color(0xFF6B4EFF)),
+                  decoration: InputDecoration(
+                    hintText: 'Search Deals & Products...',
+                    hintStyle: const TextStyle(color: Color(0xFFB0B3C6)),
+                    prefixIcon: const Icon(Icons.search, color: Color(0xFF6B4EFF)),
+                    suffixIcon: const Tooltip(
+                      message: 'Press Enter to search on Amazon',
+                      child: Icon(Icons.travel_explore, color: Color(0x806B4EFF)),
+                    ),
                     border: InputBorder.none,
-                    contentPadding:
-                        EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   ),
                   textInputAction: TextInputAction.search,
+                  onChanged: (value) => controller.setSearchQuery(value),
                   onSubmitted: (query) async {
                     if (query.trim().isNotEmpty) {
-                      // Change 'dealbridge0d-21' to your actual Amazon affiliate ID
                       const String affiliateTag = 'dealbridge0d-21';
                       final Uri url = Uri.parse(
                           'https://www.amazon.in/s?k=${Uri.encodeComponent(query)}&tag=$affiliateTag');
@@ -107,39 +110,55 @@ class HomeView extends GetView<HomeController> {
             ),
           ),
           SliverPadding(
-            padding: const EdgeInsets.only(top: 16.0, bottom: 24.0),
-            sliver: SliverToBoxAdapter(child: PlatformGrid()),
-          ),
-          const SliverPadding(
-            padding: EdgeInsets.only(top: 16.0, bottom: 24.0),
-            sliver: PlatformButtons(),
-          ),
-          // SliverPadding(
-          //   padding: const EdgeInsets.only(top: 16.0, bottom: 24.0),
-          //   sliver: ,
-          // ),
-          SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             sliver: Obx(() {
               if (controller.isLoading.value) {
-                return const SliverFillRemaining(
-                  child: Center(
-                    child: CircularProgressIndicator(color: Color(0xFF6B4EFF)),
-                  ),
-                );
-              }
-              if (controller.productList.isEmpty) {
-                return const SliverFillRemaining(
-                  child: Center(
-                    child: Text(
-                      'No products found.',
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                return const SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 40),
+                    child: Center(
+                      child: CircularProgressIndicator(color: Color(0xFF6B4EFF)),
                     ),
                   ),
                 );
               }
-              return ProductGrid(products: controller.productList);
+              if (controller.filteredProducts.isEmpty) {
+                return const SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 40),
+                    child: Center(
+                      child: Text(
+                        'No products found matching your criteria.',
+                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                      ),
+                    ),
+                  ),
+                );
+              }
+              return ProductGrid(products: controller.filteredProducts);
             }),
+          ),
+          const SliverPadding(
+            padding: EdgeInsets.fromLTRB(16, 32, 16, 12),
+            sliver: SliverToBoxAdapter(
+              child: Text(
+                'Explore Top Platforms',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w800,
+                  color: Color(0xFF1E212D),
+                  letterSpacing: -0.5,
+                ),
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.only(top: 8.0, bottom: 24.0),
+            sliver: SliverToBoxAdapter(child: PlatformGrid()),
+          ),
+          const SliverPadding(
+            padding: EdgeInsets.only(top: 8.0, bottom: 24.0),
+            sliver: PlatformButtons(),
           ),
           const SliverPadding(padding: EdgeInsets.only(bottom: 30)),
         ],

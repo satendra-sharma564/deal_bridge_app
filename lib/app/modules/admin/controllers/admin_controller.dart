@@ -1,4 +1,5 @@
 import 'package:deal_bridge_app/app/data/models/platform_model.dart';
+import 'package:deal_bridge_app/app/data/models/category_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:deal_bridge_app/app/data/models/product_model.dart';
@@ -8,6 +9,7 @@ class AdminController extends GetxController {
   final ApiService _apiService = ApiService();
   var productList = <ProductModel>[].obs;
   var platformList = <PlatformModel>[].obs;
+  var categoryList = <CategoryModel>[].obs;
   var isLoading = true.obs;
 
   @override
@@ -15,6 +17,7 @@ class AdminController extends GetxController {
     super.onInit();
     fetchProducts();
     fetchPlatforms();
+    fetchCategories();
   }
 
   void fetchProducts() async {
@@ -145,6 +148,56 @@ class AdminController extends GetxController {
       fetchPlatforms();
     } else {
       Get.snackbar('Error', 'Failed to delete platform.',
+          backgroundColor: const Color(0xFFE53935),
+          colorText: const Color(0xFFFFFFFF));
+    }
+  }
+
+  // ── Categories ───────────────────────────────────────────
+  void fetchCategories() async {
+    try {
+      var categories = await _apiService.getCategories();
+      categoryList.assignAll(categories.map((c) => CategoryModel.fromJson(c)).toList());
+    } catch (e) {
+      print("Error fetching categories: $e");
+    }
+  }
+
+  Future<bool> addCategory(String name) async {
+    isSaving(true);
+    try {
+      bool success = await _apiService.addCategory(name);
+      if (success) {
+        fetchCategories();
+      }
+      return success;
+    } finally {
+      isSaving(false);
+    }
+  }
+
+  Future<bool> updateCategory(String id, String name) async {
+    isSaving(true);
+    try {
+      bool success = await _apiService.updateCategory(id, name);
+      if (success) {
+        fetchCategories();
+      }
+      return success;
+    } finally {
+      isSaving(false);
+    }
+  }
+
+  Future<void> deleteCategory(String id) async {
+    bool success = await _apiService.deleteCategory(id);
+    if (success) {
+      Get.snackbar('Deleted', 'Category has been removed.',
+          backgroundColor: const Color(0xFF4CAF50),
+          colorText: const Color(0xFFFFFFFF));
+      fetchCategories();
+    } else {
+      Get.snackbar('Error', 'Failed to delete category.',
           backgroundColor: const Color(0xFFE53935),
           colorText: const Color(0xFFFFFFFF));
     }
