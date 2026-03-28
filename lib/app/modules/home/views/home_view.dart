@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../controllers/home_controller.dart';
 import 'widghts/product_grid.dart';
 import 'widghts/category_widget.dart';
+import 'widghts/banner_widget.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({Key? key}) : super(key: key);
@@ -27,19 +28,7 @@ class HomeView extends GetView<HomeController> {
             letterSpacing: -0.5,
           ),
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: CircleAvatar(
-              backgroundColor: const Color(0xFFF0EDFF),
-              child: IconButton(
-                icon: const Icon(Icons.admin_panel_settings,
-                    color: Color(0xFF6B4EFF)),
-                onPressed: () => Get.toNamed('/admin'),
-              ),
-            ),
-          ),
-        ],
+        actions: const [],
       ),
       body: CustomScrollView(
         slivers: [
@@ -101,6 +90,12 @@ class HomeView extends GetView<HomeController> {
                   },
                 ),
               ),
+            ),
+          ),
+          const SliverPadding(
+            padding: EdgeInsets.symmetric(vertical: 8.0),
+            sliver: SliverToBoxAdapter(
+              child: BannerWidget(),
             ),
           ),
           const SliverPadding(
