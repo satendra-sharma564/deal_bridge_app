@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:deal_bridge_app/app/data/models/product_model.dart';
+import 'platform_bottom_sheet.dart';
 
 class ProductGrid extends StatelessWidget {
   final List<ProductModel> products;
@@ -21,7 +21,7 @@ class ProductGrid extends StatelessWidget {
           final product = products[index];
           return GestureDetector(
             onTap: () {
-              Get.toNamed('/product-detail', arguments: product);
+              PlatformBottomSheet.show(context, product);
             },
             child: Container(
               decoration: BoxDecoration(
