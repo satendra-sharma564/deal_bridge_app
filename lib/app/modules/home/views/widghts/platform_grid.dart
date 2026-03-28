@@ -1,10 +1,10 @@
-import 'package:deal_bridge_app/app/modules/home/controllers/platform_controller.dart';
+import 'package:deal_bridge_app/app/modules/admin/controllers/admin_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PlatformGrid extends StatelessWidget {
-  final controller = Get.put(PlatformController());
+  final controller = Get.put(AdminController());
 
   PlatformGrid({super.key});
 
@@ -16,7 +16,7 @@ class PlatformGrid extends StatelessWidget {
 
   Future<void> openLink(String url) async {
     final uri = Uri.parse(url);
-    await launchUrl(uri, mode: LaunchMode.externalApplication);
+    await launchUrl(uri, mode: LaunchMode.inAppWebView);
   }
 
   Color hexToColor(String hex) {
@@ -41,9 +41,9 @@ class PlatformGrid extends StatelessWidget {
           crossAxisSpacing: 12,
           mainAxisSpacing: 12,
         ),
-        itemCount: controller.platforms.length,
+        itemCount: controller.platformList.length,
         itemBuilder: (context, index) {
-          final item = controller.platforms[index];
+          final item = controller.platformList[index];
 
           return InkWell(
             onTap: () => openLink(item.link),

@@ -7,8 +7,10 @@ class PlatformButtons extends StatelessWidget {
 
   Future<void> openLink(String url) async {
     final uri = Uri.parse(url);
-
-    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+    // Use inAppWebView to prevent native apps (Myntra, Flipkart, etc.)
+    // from intercepting the URL via Android deep-link intent,
+    // ensuring affiliate tags remain intact in the URL.
+    if (!await launchUrl(uri, mode: LaunchMode.inAppWebView)) {
       throw Exception("Could not launch $url");
     }
   }

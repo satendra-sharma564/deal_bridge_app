@@ -50,7 +50,7 @@ class AdminDashboardView extends GetView<AdminController> {
             padding: const EdgeInsets.only(right: 16.0),
             child: Center(
               child: ElevatedButton.icon(
-                onPressed: () => Get.to(() => AddPlatformScreen()),
+                onPressed: () => Get.to(() => AddPlatformView()),
                 icon: const Icon(Icons.add, size: 20, color: Colors.white),
                 label: const Text('Add Platform',
                     style: TextStyle(
@@ -76,6 +76,7 @@ class AdminDashboardView extends GetView<AdminController> {
         return RefreshIndicator(
           onRefresh: () async {
             controller.fetchProducts();
+            controller.fetchPlatforms();
           },
           child: CustomScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
@@ -253,6 +254,147 @@ class AdminDashboardView extends GetView<AdminController> {
                       );
                     },
                     childCount: controller.productList.length,
+                  ),
+                ),
+              ),
+              const SliverPadding(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                sliver: SliverToBoxAdapter(
+                  child: Text(
+                    'Platform Overview',
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800,
+                        color: Color(0xFF1E212D),
+                        letterSpacing: -0.5),
+                  ),
+                ),
+              ),
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(20, 10, 20, 30),
+                sliver: SliverGrid(
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 400,
+                    mainAxisSpacing: 16,
+                    crossAxisSpacing: 16,
+                    childAspectRatio: 2.5,
+                  ),
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final p = controller.platformList[index];
+                      return Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.black.withOpacity(0.03),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 4)),
+                            ]),
+                        child: Center(
+                          child: ListTile(
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: SizedBox(
+                                width: 60,
+                                height: 60,
+                                child: CachedNetworkImage(
+                                  imageUrl: p.logo,
+                                  fit: BoxFit.cover,
+                                  errorWidget: (context, url, err) => Container(
+                                      color: Colors.grey[100],
+                                      child: const Icon(Icons.broken_image,
+                                          color: Colors.grey)),
+                                ),
+                              ),
+                            ),
+                            title: Text(
+                              p.name,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: Color(0xFF1E212D)),
+                            ),
+                            subtitle: Padding(
+                              padding: const EdgeInsets.only(top: 4.0),
+                              child: Text(
+                                '${p.link}',
+                                style: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 13),
+                              ),
+                            ),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 8),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFF0EDFF),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(Icons.touch_app_rounded,
+                                          size: 14, color: Color(0xFF6B4EFF)),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        '${p.color}',
+                                        style: const TextStyle(
+                                            color: Color(0xFF6B4EFF),
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                IconButton(
+                                  padding: EdgeInsets.zero,
+                                  constraints: const BoxConstraints(),
+                                  icon: const Icon(Icons.edit_rounded,
+                                      color: Colors.blueAccent, size: 22),
+                                  onPressed: () => Get.to(
+                                      () => AddPlatformView(platformToEdit: p)),
+                                ),
+                                const SizedBox(width: 8),
+                                IconButton(
+                                  padding: EdgeInsets.zero,
+                                  constraints: const BoxConstraints(),
+                                  icon: const Icon(Icons.delete_rounded,
+                                      color: Colors.redAccent, size: 22),
+                                  onPressed: () {
+                                    Get.defaultDialog(
+                                      title: 'Delete Product',
+                                      middleText:
+                                          'Are you sure you want to delete ${p.name}?',
+                                      textConfirm: 'Delete',
+                                      textCancel: 'Cancel',
+                                      confirmTextColor: Colors.white,
+                                      buttonColor: Colors.red,
+                                      cancelTextColor: Colors.black,
+                                      onConfirm: () {
+                                        Get.back();
+                                        controller.deletePlatform(p.id);
+                                      },
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                    childCount: controller.platformList.length,
                   ),
                 ),
               ),

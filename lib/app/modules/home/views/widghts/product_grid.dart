@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:deal_bridge_app/app/data/models/product_model.dart';
-import 'package:deal_bridge_app/app/modules/product_detail/view/product_detail_view.dart';
 
 class ProductGrid extends StatelessWidget {
   final List<ProductModel> products;
@@ -45,30 +44,43 @@ class ProductGrid extends StatelessWidget {
                       width: double.infinity,
                       decoration: BoxDecoration(
                         color: Colors.grey.shade50,
-                        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                        borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(16)),
                       ),
                       child: CachedNetworkImage(
                         imageUrl: product.image,
                         fit: BoxFit.contain,
-                        errorWidget: (context, url, err) => const Icon(Icons.image, size: 40, color: Colors.grey),
+                        errorWidget: (context, url, err) => const Icon(
+                            Icons.image,
+                            size: 40,
+                            color: Colors.grey),
                       ),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12.0, vertical: 12.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           product.category,
-                          style: const TextStyle(fontSize: 10, color: Color(0xFF6B4EFF), fontWeight: FontWeight.w600, letterSpacing: 0.5),
+                          style: const TextStyle(
+                              fontSize: 10,
+                              color: Color(0xFF6B4EFF),
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.5),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           product.title,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13, color: Color(0xFF1E212D), height: 1.2),
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 13,
+                              color: Color(0xFF1E212D),
+                              height: 1.2),
                         ),
                         const SizedBox(height: 8),
                         Row(
@@ -76,7 +88,10 @@ class ProductGrid extends StatelessWidget {
                           children: [
                             Text(
                               '₹${product.price.toInt()}',
-                              style: const TextStyle(color: Color(0xFF1E212D), fontWeight: FontWeight.w900, fontSize: 16),
+                              style: const TextStyle(
+                                  color: Color(0xFF1E212D),
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 16),
                             ),
                             Container(
                               padding: const EdgeInsets.all(4),
@@ -84,7 +99,8 @@ class ProductGrid extends StatelessWidget {
                                 color: Color(0xFFF0EDFF),
                                 shape: BoxShape.circle,
                               ),
-                              child: const Icon(Icons.arrow_forward_ios, size: 10, color: Color(0xFF6B4EFF)),
+                              child: const Icon(Icons.arrow_forward_ios,
+                                  size: 10, color: Color(0xFF6B4EFF)),
                             )
                           ],
                         )

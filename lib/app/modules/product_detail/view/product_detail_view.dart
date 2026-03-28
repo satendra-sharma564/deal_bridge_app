@@ -45,44 +45,62 @@ class ProductDetailView extends StatelessWidget {
               child: CachedNetworkImage(
                 imageUrl: product.image,
                 fit: BoxFit.contain,
-                errorWidget: (context, url, err) => const Icon(Icons.image, size: 100),
+                errorWidget: (context, url, err) =>
+                    const Icon(Icons.image, size: 100),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
                       color: const Color(0xFFF0EDFF), // light purple bg
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
                       product.category,
-                      style: const TextStyle(fontSize: 14, color: Color(0xFF6B4EFF), fontWeight: FontWeight.w600),
+                      style: const TextStyle(
+                          fontSize: 14,
+                          color: Color(0xFF6B4EFF),
+                          fontWeight: FontWeight.w600),
                     ),
                   ),
                   const SizedBox(height: 16),
                   Text(
                     product.title,
-                    style: const TextStyle(fontSize: 26, fontWeight: FontWeight.w800, color: Color(0xFF1E212D)),
+                    style: const TextStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.w800,
+                        color: Color(0xFF1E212D)),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     '₹${product.price.toInt()}',
-                    style: const TextStyle(fontSize: 28, color: Color(0xFF6B4EFF), fontWeight: FontWeight.w900, letterSpacing: 0.5),
+                    style: const TextStyle(
+                        fontSize: 28,
+                        color: Color(0xFF6B4EFF),
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 0.5),
                   ),
                   const SizedBox(height: 32),
                   const Text(
                     'Product Details',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: Color(0xFF1E212D)),
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                        color: Color(0xFF1E212D)),
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    product.description ?? 'This is a great product that you will love. Perfect for any occasion and worth every penny.',
-                    style: TextStyle(fontSize: 15, color: Colors.grey[600], height: 1.5),
+                    product.description ??
+                        'This is a great product that you will love. Perfect for any occasion and worth every penny.',
+                    style: TextStyle(
+                        fontSize: 15, color: Colors.grey[600], height: 1.5),
                   )
                 ],
               ),
@@ -91,7 +109,8 @@ class ProductDetailView extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: Container(
-        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 24, top: 12),
+        padding:
+            const EdgeInsets.only(left: 20, right: 20, bottom: 24, top: 12),
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
@@ -113,22 +132,29 @@ class ProductDetailView extends StatelessWidget {
               ),
               elevation: 0,
             ),
-            icon: const Icon(Icons.shopping_cart_outlined, color: Colors.white, size: 24),
+            icon: const Icon(Icons.shopping_cart_outlined,
+                color: Colors.white, size: 24),
             label: const Text(
               'Buy on Amazon',
-              style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold),
             ),
             onPressed: () async {
               final linkStr = product.affiliateLink ?? product.link;
               if (linkStr != null && linkStr.isNotEmpty) {
                 final Uri linkUri = Uri.parse(linkStr);
-                if (!await launchUrl(linkUri, mode: LaunchMode.externalApplication)) {
+                if (!await launchUrl(linkUri,
+                    mode: LaunchMode.inAppWebView)) {
                   Get.rawSnackbar(message: 'Could not launch Amazon Link');
                 }
               } else {
                 final String query = Uri.encodeComponent(product.title);
-                final Uri amazonUri = Uri.parse('https://www.amazon.in/s?k=$query&tag=dealbridge0d-21');
-                if (!await launchUrl(amazonUri, mode: LaunchMode.externalApplication)) {
+                final Uri amazonUri = Uri.parse(
+                    'https://www.amazon.in/s?k=$query&tag=dealbridge0d-21');
+                if (!await launchUrl(amazonUri,
+                    mode: LaunchMode.inAppWebView)) {
                   Get.rawSnackbar(message: 'Could not launch Amazon');
                 }
               }

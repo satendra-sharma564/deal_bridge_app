@@ -91,16 +91,34 @@ class AdminController extends GetxController {
     }
   }
 
-  Future<bool> addPlatform(Map<String, dynamic> platformData) async {
-    isSaving(true);
+  // Future<bool> addPlatform(Map<String, dynamic> platformData) async {
+  //   isSaving(true);
+  //   try {
+  //     bool success = await _apiService.addPlatform(platformData);
+  //     if (success) {
+  //       fetchPlatforms(); // Refresh the platform list
+  //     }
+  //     return success;
+  //   } finally {
+  //     isSaving(false);
+  //   }
+  // }
+
+  Future<bool> addPlatform(Map<String, dynamic> data) async {
     try {
-      bool success = await _apiService.addPlatform(platformData);
-      if (success) {
-        fetchPlatforms(); // Refresh the platform list
-      }
-      return success;
-    } finally {
-      isSaving(false);
+      isLoading(true);
+
+      print("📡 Calling API...");
+      final res = await _apiService.addPlatform(data);
+
+      print("📡 API result: $res");
+
+      isLoading(false);
+      return res;
+    } catch (e) {
+      print("❌ Controller Error: $e");
+      isLoading(false);
+      return false;
     }
   }
 

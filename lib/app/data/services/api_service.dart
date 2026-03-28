@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:deal_bridge_app/app/data/models/platform_model.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter/foundation.dart';
 import '../models/product_model.dart';
 
 class ApiService {
@@ -74,19 +73,41 @@ class ApiService {
     return false;
   }
 
+  // Future<bool> addPlatform(Map<String, dynamic> data) async {
+  //   try {
+  //     final response = await http.post(
+  //       Uri.parse('$baseUrl/platforms'),
+  //       headers: {'Content-Type': 'application/json'},
+  //       body: jsonEncode(data),
+  //     );
+
+  //     if (response.statusCode == 200 || response.statusCode == 201) {
+  //       return true;
+  //     }
+  //   } catch (e) {
+  //     print('Error adding platform: $e');
+  //   }
+  //   return false;
+  // }
+
   Future<bool> addPlatform(Map<String, dynamic> data) async {
     try {
+      print("🌐 API URL: $baseUrl/platforms");
+
       final response = await http.post(
         Uri.parse('$baseUrl/platforms'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(data),
       );
 
+      print("📥 Status Code: ${response.statusCode}");
+      print("📥 Response Body: ${response.body}");
+
       if (response.statusCode == 200 || response.statusCode == 201) {
         return true;
       }
     } catch (e) {
-      print('Error adding platform: $e');
+      print('❌ API Error: $e');
     }
     return false;
   }
@@ -95,8 +116,9 @@ class ApiService {
     try {
       final response = await http.get(Uri.parse('$baseUrl/platforms'));
       if (response.statusCode == 200) {
-        Iterable json = jsonDecode(response.body);
-        return json.map((e) => PlatformModel.fromJson(e)).toList();
+        //Iterable json = jsonDecode(response.body);
+        final List list = jsonDecode(response.body)['data'];
+        return list.map((e) => PlatformModel.fromJson(e)).toList();
       }
     } catch (e) {
       print('Error fetching products: $e');
