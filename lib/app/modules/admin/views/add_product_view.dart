@@ -23,6 +23,18 @@ class _AddProductViewState extends State<AddProductView> {
   late final TextEditingController _catCtrl;
   late final TextEditingController _imageCtrl;
 
+  // Track dynamic affiliate links
+  final List<Map<String, dynamic>> _affiliateLinks = [];
+  final List<String> _availablePlatforms = [
+    'Amazon',
+    'Flipkart',
+    'Myntra',
+    'Ajio',
+    'Meesho',
+    'Reliance Digital',
+    'Other'
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -51,6 +63,25 @@ class _AddProductViewState extends State<AddProductView> {
     _descCtrl = TextEditingController(text: p?.description ?? '');
     _catCtrl = TextEditingController(text: initialCustomCat);
     _imageCtrl = TextEditingController(text: p?.image ?? '');
+
+    if (p != null && p.links.isNotEmpty) {
+      for (var link in p.links) {
+        String plat = link.platform;
+        if (!_availablePlatforms.contains(plat) && plat.isNotEmpty) {
+          plat = 'Other';
+        }
+        _affiliateLinks.add({
+          'platform': plat,
+          'urlCtrl': TextEditingController(text: link.url),
+        });
+      }
+    } else {
+      // Default: 1 empty link for Amazon
+      _affiliateLinks.add({
+        'platform': 'Amazon',
+        'urlCtrl': TextEditingController(),
+      });
+    }
   }
 
   @override
@@ -60,6 +91,9 @@ class _AddProductViewState extends State<AddProductView> {
     _descCtrl.dispose();
     _catCtrl.dispose();
     _imageCtrl.dispose();
+    for (var item in _affiliateLinks) {
+      item['urlCtrl'].dispose();
+    }
     super.dispose();
   }
 
@@ -80,6 +114,14 @@ class _AddProductViewState extends State<AddProductView> {
       return;
     }
 
+    // Collect affiliate links
+    final linksList = _affiliateLinks.where((item) => (item['urlCtrl'] as TextEditingController).text.trim().isNotEmpty).map((item) {
+      return {
+        "platform": item['platform'],
+        "url": (item['urlCtrl'] as TextEditingController).text.trim(),
+      };
+    }).toList();
+
     final productData = {
       "title": _titleCtrl.text.trim(),
       "image": _imageCtrl.text.trim().isEmpty
@@ -88,6 +130,7 @@ class _AddProductViewState extends State<AddProductView> {
       "price": double.tryParse(_priceCtrl.text.trim()) ?? 0.0,
       "description": _descCtrl.text.trim(),
       "category": finalCategory,
+      "links": linksList,
     };
 
     bool success;
@@ -226,6 +269,9 @@ class _AddProductViewState extends State<AddProductView> {
                     hint: 'https://via.placeholder.com/150',
                     icon: Icons.image_rounded,
                     controller: _imageCtrl),
+                const SizedBox(height: 20),
+                _buildSectionTitle('Affiliate Links'),
+                _buildAffiliateLinksSection(),
                 const SizedBox(height: 36),
                 SizedBox(
                   width: double.infinity,
@@ -301,6 +347,114 @@ class _AddProductViewState extends State<AddProductView> {
           borderSide: const BorderSide(color: Color(0xFF6B4EFF), width: 1.5),
         ),
       ),
+    );
+  }
+
+  Widget _buildAffiliateLinksSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: _affiliateLinks.length,
+          separatorBuilder: (context, index) => const SizedBox(height: 12),
+          itemBuilder: (context, index) {
+            final item = _affiliateLinks[index];
+            return Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF9FAFF),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.grey.shade200),
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      // Dropdown for platform
+                      Expanded(
+                        child: DropdownButtonFormField<String>(
+                          value: item['platform'],
+                          items: _availablePlatforms
+                              .map((p) => DropdownMenuItem(value: p, child: Text(p, style: const TextStyle(fontSize: 14))))
+                              .toList(),
+                          onChanged: (val) {
+                            if (val != null) {
+                              setState(() {
+                                item['platform'] = val;
+                              });
+                            }
+                          },
+                          decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                            isDense: true,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      // Remove button
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            (item['urlCtrl'] as TextEditingController).dispose();
+                            _affiliateLinks.removeAt(index);
+                          });
+                        },
+                        icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  // URL field
+                  TextField(
+                    controller: item['urlCtrl'],
+                    decoration: InputDecoration(
+                      hintText: 'Enter Product Link',
+                      hintStyle: const TextStyle(color: Color(0xFFB0B3C6), fontSize: 14),
+                      prefixIcon: const Icon(Icons.link, size: 20, color: Colors.grey),
+                      filled: true,
+                      fillColor: Colors.white,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Color(0xFF6B4EFF), width: 1.5),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            );
+          },
+        ),
+        const SizedBox(height: 12),
+        TextButton.icon(
+          onPressed: () {
+            setState(() {
+              _affiliateLinks.add({
+                'platform': 'Amazon',
+                'urlCtrl': TextEditingController(),
+              });
+            });
+          },
+          icon: const Icon(Icons.add, color: Color(0xFF6B4EFF)),
+          label: const Text('Add Another Link', style: TextStyle(color: Color(0xFF6B4EFF), fontWeight: FontWeight.bold)),
+          style: TextButton.styleFrom(
+            backgroundColor: const Color(0xFF6B4EFF).withOpacity(0.1),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+        ),
+      ],
     );
   }
 }

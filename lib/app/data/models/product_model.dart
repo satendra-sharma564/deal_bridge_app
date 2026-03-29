@@ -1,3 +1,21 @@
+class AffiliateLinkModel {
+  final String platform;
+  final String url;
+
+  AffiliateLinkModel({required this.platform, required this.url});
+
+  factory AffiliateLinkModel.fromJson(Map<String, dynamic> json) =>
+      AffiliateLinkModel(
+        platform: json['platform'] ?? '',
+        url: json['url'] ?? '',
+      );
+
+  Map<String, dynamic> toJson() => {
+        'platform': platform,
+        'url': url,
+      };
+}
+
 class ProductModel {
   final String? id;
   final String title;
@@ -8,6 +26,7 @@ class ProductModel {
   final String? description;
   final String? affiliateLink;
   final String? link;
+  final List<AffiliateLinkModel> links;
 
   ProductModel({
     this.id,
@@ -19,6 +38,7 @@ class ProductModel {
     this.description,
     this.affiliateLink,
     this.link,
+    this.links = const [],
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
@@ -31,6 +51,10 @@ class ProductModel {
         description: json['description'],
         affiliateLink: json['affiliateLink'],
         link: json['link'],
+        links: json['links'] != null
+            ? List<AffiliateLinkModel>.from(
+                json['links'].map((x) => AffiliateLinkModel.fromJson(x)))
+            : [],
       );
 
   Map<String, dynamic> toJson() => {
@@ -42,5 +66,6 @@ class ProductModel {
         'description': description,
         'affiliateLink': affiliateLink,
         'link': link,
+        'links': links.map((x) => x.toJson()).toList(),
       };
 }

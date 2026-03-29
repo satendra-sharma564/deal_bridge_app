@@ -1,4 +1,3 @@
-import 'package:deal_bridge_app/app/modules/home/views/widghts/platform_buttons.dart';
 import 'package:deal_bridge_app/app/modules/home/views/widghts/platform_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -60,16 +59,18 @@ class HomeView extends GetView<HomeController> {
                           offset: const Offset(0, 4)),
                     ]),
                 child: TextField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: 'Search Deals & Products...',
-                    hintStyle: const TextStyle(color: Color(0xFFB0B3C6)),
-                    prefixIcon: const Icon(Icons.search, color: Color(0xFF6B4EFF)),
-                    suffixIcon: const Tooltip(
+                    hintStyle: TextStyle(color: Color(0xFFB0B3C6)),
+                    prefixIcon: Icon(Icons.search, color: Color(0xFF6B4EFF)),
+                    suffixIcon: Tooltip(
                       message: 'Press Enter to search on Amazon',
-                      child: Icon(Icons.travel_explore, color: Color(0x806B4EFF)),
+                      child:
+                          Icon(Icons.travel_explore, color: Color(0x806B4EFF)),
                     ),
                     border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   ),
                   textInputAction: TextInputAction.search,
                   onChanged: (value) => controller.setSearchQuery(value),
@@ -112,7 +113,8 @@ class HomeView extends GetView<HomeController> {
                   child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 40),
                     child: Center(
-                      child: CircularProgressIndicator(color: Color(0xFF6B4EFF)),
+                      child:
+                          CircularProgressIndicator(color: Color(0xFF6B4EFF)),
                     ),
                   ),
                 );
@@ -151,11 +153,6 @@ class HomeView extends GetView<HomeController> {
             padding: const EdgeInsets.only(top: 8.0, bottom: 24.0),
             sliver: SliverToBoxAdapter(child: PlatformGrid()),
           ),
-          const SliverPadding(
-            padding: EdgeInsets.only(top: 8.0, bottom: 24.0),
-            sliver: PlatformButtons(),
-          ),
-          const SliverPadding(padding: EdgeInsets.only(bottom: 30)),
         ],
       ),
     );

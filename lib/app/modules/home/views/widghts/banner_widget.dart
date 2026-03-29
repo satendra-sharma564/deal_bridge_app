@@ -29,7 +29,7 @@ class _BannerWidgetState extends State<BannerWidget> {
     {
       'title': 'Daily Steals',
       'subtitle': 'Lowest prices of the day.',
-      'image': 'https://plus.unsplash.com/premium_photo-1678122394595-5cb959082bd4?q=80&w=1974&auto=format&fit=crop',
+      'image': 'https://images.unsplash.com/photo-1603539947678-cd3954ed515d?q=80&w=1974&auto=format&fit=crop',
       'button': 'View Offers'
     },
   ];

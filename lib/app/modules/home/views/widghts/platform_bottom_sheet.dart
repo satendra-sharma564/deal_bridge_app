@@ -19,58 +19,46 @@ class PlatformBottomSheet extends StatelessWidget {
     );
   }
 
-  // ── All supported platforms with their affiliate links ──────────────────
-  static final List<Map<String, dynamic>> _platforms = [
-    {
-      'name': 'Amazon',
+  // ── All supported platforms visual configs ──────────────────
+  static final Map<String, Map<String, dynamic>> _platformConfigs = {
+    'Amazon': {
       'logo': 'https://logo.clearbit.com/amazon.in',
       'color': const Color(0xFFFFF8EC),
       'badge': '🏷️ Affiliate',
-      'hint': 'Product automatically search hoga',
-      'getUrl': (String title) =>
-          'https://www.amazon.in/s?k=${Uri.encodeComponent(title)}&tag=dealbridge0d-21',
+      'hint': 'Product link ready',
     },
-    {
-      'name': 'Flipkart',
+    'Flipkart': {
       'logo': 'https://logo.clearbit.com/flipkart.com',
       'color': const Color(0xFFE8F4FF),
       'badge': '🏷️ Affiliate',
-      'hint': 'Platform pe jaake khud search karein',
-      'getUrl': (String title) => 'https://fktr.in/l4NUzGg',
     },
-    {
-      'name': 'Myntra',
+    'Myntra': {
       'logo': 'https://logo.clearbit.com/myntra.com',
       'color': const Color(0xFFFFF0F5),
       'badge': '🏷️ Affiliate',
-      'hint': 'Platform pe jaake khud search karein',
-      'getUrl': (String title) => 'https://myntr.it/I2w661u',
     },
-    {
-      'name': 'Ajio',
+    'Ajio': {
       'logo': 'https://logo.clearbit.com/ajio.com',
       'color': const Color(0xFFF0F0F0),
       'badge': '🏷️ Affiliate',
-      'hint': 'Platform pe jaake khud search karein',
-      'getUrl': (String title) => 'https://ajiio.in/HR7e33a',
     },
-    {
-      'name': 'Meesho',
+    'Meesho': {
       'logo': 'https://logo.clearbit.com/meesho.com',
       'color': const Color(0xFFF5F0FF),
       'badge': '🏷️ Affiliate',
-      'hint': 'Platform pe jaake khud search karein',
-      'getUrl': (String title) => 'https://bitli.in/tYJi64g',
     },
-    {
-      'name': 'Reliance Digital',
+    'Reliance Digital': {
       'logo': 'https://logo.clearbit.com/reliancedigital.in',
       'color': const Color(0xFFFFEEEE),
       'badge': '🏷️ Affiliate',
-      'hint': 'Platform pe jaake khud search karein',
-      'getUrl': (String title) => 'https://bitli.in/79N57YE',
     },
-  ];
+    'Other': {
+      'logo':
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Check_green_icon.svg/1200px-Check_green_icon.svg.png',
+      'color': const Color(0xFFF0F8FF),
+      'badge': '🏷️ Affiliate',
+    }
+  };
 
   Future<void> _openPlatform(String url) async {
     final uri = Uri.parse(url);
@@ -192,121 +180,135 @@ class PlatformBottomSheet extends StatelessWidget {
           ),
 
           // ── Platform list ────────────────────────────
-          ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            itemCount: _platforms.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 8),
-            itemBuilder: (context, index) {
-              final p = _platforms[index];
-              final url =
-                  (p['getUrl'] as String Function(String))(product.title);
+          if (product.links.isEmpty)
+            const Padding(
+              padding: EdgeInsets.all(20.0),
+              child: Text(
+                'No affiliate links available for this product.',
+                style: TextStyle(color: Colors.grey, fontSize: 14),
+              ),
+            )
+          else
+            ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              itemCount: product.links.length,
+              separatorBuilder: (_, __) => const SizedBox(height: 8),
+              itemBuilder: (context, index) {
+                final linkItem = product.links[index];
+                final platformName = linkItem.platform;
+                final url = linkItem.url;
 
-              return Material(
-                color: p['color'] as Color,
-                borderRadius: BorderRadius.circular(16),
-                child: InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                    _openPlatform(url);
-                  },
+                final config = _platformConfigs[platformName] ??
+                    _platformConfigs['Other']!;
+
+                return Material(
+                  color: config['color'] as Color,
                   borderRadius: BorderRadius.circular(16),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 12),
-                    child: Row(
-                      children: [
-                        // Logo
-                        Container(
-                          width: 44,
-                          height: 44,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: CachedNetworkImage(
-                              imageUrl: p['logo'] as String,
-                              fit: BoxFit.contain,
-                              httpHeaders: const {
-                                'User-Agent':
-                                    'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36',
-                              },
-                              errorWidget: (_, __, ___) => const Icon(
-                                  Icons.store_rounded,
-                                  color: Color(0xFF6B4EFF)),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                      _openPlatform(url);
+                    },
+                    borderRadius: BorderRadius.circular(16),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
+                      child: Row(
+                        children: [
+                          // Logo
+                          Container(
+                            width: 44,
+                            height: 44,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: CachedNetworkImage(
+                                imageUrl: config['logo'] as String,
+                                fit: BoxFit.contain,
+                                httpHeaders: const {
+                                  'User-Agent':
+                                      'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36',
+                                },
+                                errorWidget: (_, __, ___) => const Icon(
+                                    Icons.store_rounded,
+                                    color: Color(0xFF6B4EFF)),
+                              ),
                             ),
                           ),
-                        ),
-                        const SizedBox(width: 14),
+                          const SizedBox(width: 14),
 
-                        // Name + badge
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    p['name'] as String,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: 15,
-                                      color: Color(0xFF1E212D),
-                                    ),
-                                  ),
-                                  if (p['badge'] != null) ...[
-                                    const SizedBox(width: 8),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8, vertical: 2),
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFF6B4EFF),
-                                        borderRadius: BorderRadius.circular(20),
+                          // Name + badge
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      platformName,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: 15,
+                                        color: Color(0xFF1E212D),
                                       ),
-                                      child: Text(
-                                        p['badge'] as String,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w700,
+                                    ),
+                                    if (config['badge'] != null) ...[
+                                      const SizedBox(width: 8),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8, vertical: 2),
+                                        decoration: BoxDecoration(
+                                          color: const Color(0xFF6B4EFF),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                        child: Text(
+                                          config['badge'] as String,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w700,
+                                          ),
                                         ),
                                       ),
-                                    ),
+                                    ],
                                   ],
-                                ],
-                              ),
-                              const SizedBox(height: 2),
-                              Text(
-                                p['hint'] as String? ?? 'Yahan search karein',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey.shade500,
                                 ),
-                              ),
-                            ],
+                                const SizedBox(height: 2),
+                                Text(
+                                  config['hint'] as String? ??
+                                      'Click to view product',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey.shade500,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
 
-                        // Arrow
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: const BoxDecoration(
-                            color: Color(0xFF6B4EFF),
-                            shape: BoxShape.circle,
+                          // Arrow
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: const BoxDecoration(
+                              color: Color(0xFF6B4EFF),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(Icons.arrow_forward_ios,
+                                size: 12, color: Colors.white),
                           ),
-                          child: const Icon(Icons.arrow_forward_ios,
-                              size: 12, color: Colors.white),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              );
-            },
-          ),
+                );
+              },
+            ),
 
           // Bottom safe area
           SizedBox(height: MediaQuery.of(context).padding.bottom + 16),
