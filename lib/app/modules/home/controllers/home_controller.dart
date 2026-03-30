@@ -31,7 +31,8 @@ class HomeController extends GetxController {
   void fetchCategories() async {
     try {
       var categories = await _apiService.getCategories();
-      categoryList.assignAll(categories.map((c) => CategoryModel.fromJson(c)).toList());
+      categoryList
+          .assignAll(categories.map((c) => CategoryModel.fromJson(c)).toList());
     } catch (e) {
       print("Error fetching categories: $e");
     }
@@ -47,18 +48,20 @@ class HomeController extends GetxController {
 
   List<ProductModel> get filteredProducts {
     List<ProductModel> filtered = productList.toList();
-    
+
     // Filter by Category
     if (selectedCategory.value != 'All') {
-      filtered = filtered.where((p) => p.category == selectedCategory.value).toList();
+      filtered =
+          filtered.where((p) => p.category == selectedCategory.value).toList();
     }
-    
+
     // Filter by Search Query
     if (searchQuery.value.trim().isNotEmpty) {
       final query = searchQuery.value.trim().toLowerCase();
-      filtered = filtered.where((p) => p.title.toLowerCase().contains(query)).toList();
+      filtered =
+          filtered.where((p) => p.title.toLowerCase().contains(query)).toList();
     }
-    
+
     return filtered;
   }
 }

@@ -5,7 +5,8 @@ import '../../../data/services/version_service.dart';
 import '../../../routes/app_pages.dart';
 
 /// Current installed app version — must match pubspec.yaml version string
-const String kAppVersion = '1.0.1'; // ← Update this every time you release new APK
+const String kAppVersion =
+    '1.0.1'; // ← Update this every time you release new APK
 
 class SplashController extends GetxController {
   final RxBool isChecking = true.obs;
@@ -35,7 +36,8 @@ class SplashController extends GetxController {
       WillPopScope(
         onWillPop: () async => false,
         child: Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           backgroundColor: Colors.white,
           child: Padding(
             padding: const EdgeInsets.all(24),

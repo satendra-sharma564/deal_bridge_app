@@ -143,13 +143,46 @@ class PlatformBottomSheet extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 4),
-                      Text(
-                        '₹${product.price.toInt()}',
-                        style: const TextStyle(
-                          color: Color(0xFF6B4EFF),
-                          fontWeight: FontWeight.w900,
-                          fontSize: 16,
-                        ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            '₹${product.price.toInt()}',
+                            style: const TextStyle(
+                              color: Color(0xFF6B4EFF),
+                              fontWeight: FontWeight.w900,
+                              fontSize: 16,
+                            ),
+                          ),
+                          if (product.mrp > product.price) ...[
+                            const SizedBox(width: 8),
+                            Text(
+                              '₹${product.mrp.toInt()}',
+                              style: const TextStyle(
+                                color: Colors.grey,
+                                decoration: TextDecoration.lineThrough,
+                                fontSize: 13,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 6, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: Colors.red.shade50,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                '${((product.mrp - product.price) / product.mrp * 100).toInt()}% OFF',
+                                style: const TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ],
                       ),
                     ],
                   ),

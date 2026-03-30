@@ -37,11 +37,12 @@ class PlatformGrid extends StatelessWidget {
         return Image.memory(
           bytes,
           fit: BoxFit.contain,
-          errorBuilder: (_, __, ___) =>
-              const Icon(Icons.store_rounded, size: 40, color: Color(0xFF6B4EFF)),
+          errorBuilder: (_, __, ___) => const Icon(Icons.store_rounded,
+              size: 40, color: Color(0xFF6B4EFF)),
         );
       } catch (_) {
-        return const Icon(Icons.store_rounded, size: 40, color: Color(0xFF6B4EFF));
+        return const Icon(Icons.store_rounded,
+            size: 40, color: Color(0xFF6B4EFF));
       }
     }
     // Regular network URL

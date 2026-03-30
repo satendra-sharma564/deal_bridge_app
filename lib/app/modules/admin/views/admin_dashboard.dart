@@ -29,7 +29,8 @@ class AdminDashboardView extends GetView<AdminController> {
         actions: [
           PopupMenuButton<String>(
             icon: const Icon(Icons.menu_rounded, color: Color(0xFF1E212D)),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             onSelected: (value) {
               if (value == 'category') {
                 Get.to(() => CategoryManagerView());
@@ -46,7 +47,8 @@ class AdminDashboardView extends GetView<AdminController> {
                   children: const [
                     Icon(Icons.category, color: Color(0xFF6B4EFF), size: 20),
                     SizedBox(width: 12),
-                    Text('Manage Categories', style: TextStyle(fontWeight: FontWeight.w600)),
+                    Text('Manage Categories',
+                        style: TextStyle(fontWeight: FontWeight.w600)),
                   ],
                 ),
               ),
@@ -56,7 +58,8 @@ class AdminDashboardView extends GetView<AdminController> {
                   children: const [
                     Icon(Icons.inventory_2, color: Color(0xFF6B4EFF), size: 20),
                     SizedBox(width: 12),
-                    Text('Add Product', style: TextStyle(fontWeight: FontWeight.w600)),
+                    Text('Add Product',
+                        style: TextStyle(fontWeight: FontWeight.w600)),
                   ],
                 ),
               ),
@@ -66,7 +69,8 @@ class AdminDashboardView extends GetView<AdminController> {
                   children: const [
                     Icon(Icons.storefront, color: Color(0xFF6B4EFF), size: 20),
                     SizedBox(width: 12),
-                    Text('Add Platform', style: TextStyle(fontWeight: FontWeight.w600)),
+                    Text('Add Platform',
+                        style: TextStyle(fontWeight: FontWeight.w600)),
                   ],
                 ),
               ),
@@ -331,6 +335,8 @@ class AdminDashboardView extends GetView<AdminController> {
                               padding: const EdgeInsets.only(top: 4.0),
                               child: Text(
                                 '${p.link}',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     color: Colors.grey[600],
                                     fontWeight: FontWeight.w500,

@@ -157,7 +157,8 @@ class AdminController extends GetxController {
   void fetchCategories() async {
     try {
       var categories = await _apiService.getCategories();
-      categoryList.assignAll(categories.map((c) => CategoryModel.fromJson(c)).toList());
+      categoryList
+          .assignAll(categories.map((c) => CategoryModel.fromJson(c)).toList());
     } catch (e) {
       print("Error fetching categories: $e");
     }

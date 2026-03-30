@@ -35,14 +35,17 @@ class CategoryManagerView extends StatelessWidget {
                         if (cat == null) {
                           success = await controller.addCategory(name);
                         } else {
-                          success = await controller.updateCategory(cat.id, name);
+                          success =
+                              await controller.updateCategory(cat.id, name);
                         }
 
                         if (success) {
                           Get.back();
                           Get.snackbar(
                             'Success',
-                            cat == null ? 'Category added!' : 'Category updated!',
+                            cat == null
+                                ? 'Category added!'
+                                : 'Category updated!',
                             backgroundColor: Colors.green.shade100,
                             colorText: Colors.green.shade900,
                           );
@@ -50,7 +53,9 @@ class CategoryManagerView extends StatelessWidget {
                       },
                 child: controller.isSaving.value
                     ? const SizedBox(
-                        height: 16, width: 16, child: CircularProgressIndicator(strokeWidth: 2))
+                        height: 16,
+                        width: 16,
+                        child: CircularProgressIndicator(strokeWidth: 2))
                     : Text(cat == null ? 'Add' : 'Update'),
               )),
         ],
@@ -87,7 +92,8 @@ class CategoryManagerView extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFF4F7FC),
       appBar: AppBar(
-        title: const Text('Manage Categories', style: TextStyle(color: Colors.black)),
+        title: const Text('Manage Categories',
+            style: TextStyle(color: Colors.black)),
         backgroundColor: Colors.white,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
@@ -96,7 +102,8 @@ class CategoryManagerView extends StatelessWidget {
         backgroundColor: const Color(0xFF6B4EFF),
         onPressed: () => _showAddEditDialog(context),
         icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('New Category', style: TextStyle(color: Colors.white)),
+        label:
+            const Text('New Category', style: TextStyle(color: Colors.white)),
       ),
       body: Obx(() {
         if (controller.isLoading.value && controller.categoryList.isEmpty) {
@@ -114,9 +121,11 @@ class CategoryManagerView extends StatelessWidget {
             final cat = controller.categoryList[index];
             return Card(
               margin: const EdgeInsets.only(bottom: 12),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12)),
               child: ListTile(
-                title: Text(cat.name, style: const TextStyle(fontWeight: FontWeight.w600)),
+                title: Text(cat.name,
+                    style: const TextStyle(fontWeight: FontWeight.w600)),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [

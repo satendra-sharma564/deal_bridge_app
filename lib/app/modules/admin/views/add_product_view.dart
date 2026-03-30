@@ -18,6 +18,7 @@ class _AddProductViewState extends State<AddProductView> {
   String? _selectedDropCategory;
 
   late final TextEditingController _titleCtrl;
+  late final TextEditingController _mrpCtrl;
   late final TextEditingController _priceCtrl;
   late final TextEditingController _descCtrl;
   late final TextEditingController _catCtrl;
@@ -58,6 +59,7 @@ class _AddProductViewState extends State<AddProductView> {
     }
 
     _titleCtrl = TextEditingController(text: p?.title ?? '');
+    _mrpCtrl = TextEditingController(text: p != null ? p.mrp.toString() : '');
     _priceCtrl =
         TextEditingController(text: p != null ? p.price.toString() : '');
     _descCtrl = TextEditingController(text: p?.description ?? '');
@@ -87,6 +89,7 @@ class _AddProductViewState extends State<AddProductView> {
   @override
   void dispose() {
     _titleCtrl.dispose();
+    _mrpCtrl.dispose();
     _priceCtrl.dispose();
     _descCtrl.dispose();
     _catCtrl.dispose();
@@ -98,8 +101,10 @@ class _AddProductViewState extends State<AddProductView> {
   }
 
   void _submitProduct() async {
-    if (_titleCtrl.text.isEmpty || _priceCtrl.text.isEmpty) {
-      Get.snackbar('Error', 'Title and Price are required!',
+    if (_titleCtrl.text.isEmpty ||
+        _mrpCtrl.text.isEmpty ||
+        _priceCtrl.text.isEmpty) {
+      Get.snackbar('Error', 'Title, MRP, and Price are required!',
           backgroundColor: Colors.redAccent, colorText: Colors.white);
       return;
     }
@@ -115,7 +120,10 @@ class _AddProductViewState extends State<AddProductView> {
     }
 
     // Collect affiliate links
-    final linksList = _affiliateLinks.where((item) => (item['urlCtrl'] as TextEditingController).text.trim().isNotEmpty).map((item) {
+    final linksList = _affiliateLinks
+        .where((item) =>
+            (item['urlCtrl'] as TextEditingController).text.trim().isNotEmpty)
+        .map((item) {
       return {
         "platform": item['platform'],
         "url": (item['urlCtrl'] as TextEditingController).text.trim(),
@@ -127,6 +135,7 @@ class _AddProductViewState extends State<AddProductView> {
       "image": _imageCtrl.text.trim().isEmpty
           ? "https://via.placeholder.com/150"
           : _imageCtrl.text.trim(),
+      "mrp": double.tryParse(_mrpCtrl.text.trim()) ?? 0.0,
       "price": double.tryParse(_priceCtrl.text.trim()) ?? 0.0,
       "description": _descCtrl.text.trim(),
       "category": finalCategory,
@@ -201,12 +210,37 @@ class _AddProductViewState extends State<AddProductView> {
                     icon: Icons.title_rounded,
                     controller: _titleCtrl),
                 const SizedBox(height: 20),
-                _buildSectionTitle('Price (₹)'),
-                _buildTextField(
-                    hint: 'e.g. 99999',
-                    icon: Icons.attach_money_rounded,
-                    isNumber: true,
-                    controller: _priceCtrl),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildSectionTitle('MRP (₹)'),
+                          _buildTextField(
+                              hint: 'e.g. 1500',
+                              icon: Icons.local_offer_rounded,
+                              isNumber: true,
+                              controller: _mrpCtrl),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildSectionTitle('Deal Price (₹)'),
+                          _buildTextField(
+                              hint: 'e.g. 999',
+                              icon: Icons.attach_money_rounded,
+                              isNumber: true,
+                              controller: _priceCtrl),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 20),
                 _buildSectionTitle('Description'),
                 _buildTextField(
@@ -216,15 +250,18 @@ class _AddProductViewState extends State<AddProductView> {
                 const SizedBox(height: 20),
                 _buildSectionTitle('Product Category'),
                 Obx(() {
-                  final catNames = controller.categoryList.map((c) => c.name).toList();
+                  final catNames =
+                      controller.categoryList.map((c) => c.name).toList();
                   if (!catNames.contains('Custom')) {
                     catNames.add('Custom');
                   }
-                  
+
                   // Ensure current selection is valid
-                  if (_selectedDropCategory != null && !catNames.contains(_selectedDropCategory)) {
+                  if (_selectedDropCategory != null &&
+                      !catNames.contains(_selectedDropCategory)) {
                     _selectedDropCategory = 'Custom';
-                  } else if (_selectedDropCategory == null && catNames.isNotEmpty) {
+                  } else if (_selectedDropCategory == null &&
+                      catNames.isNotEmpty) {
                     _selectedDropCategory = catNames.first;
                   }
 
@@ -377,7 +414,10 @@ class _AddProductViewState extends State<AddProductView> {
                         child: DropdownButtonFormField<String>(
                           value: item['platform'],
                           items: _availablePlatforms
-                              .map((p) => DropdownMenuItem(value: p, child: Text(p, style: const TextStyle(fontSize: 14))))
+                              .map((p) => DropdownMenuItem(
+                                  value: p,
+                                  child: Text(p,
+                                      style: const TextStyle(fontSize: 14))))
                               .toList(),
                           onChanged: (val) {
                             if (val != null) {
@@ -387,8 +427,10 @@ class _AddProductViewState extends State<AddProductView> {
                             }
                           },
                           decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                            contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 12, vertical: 8),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12)),
                             isDense: true,
                           ),
                         ),
@@ -398,11 +440,13 @@ class _AddProductViewState extends State<AddProductView> {
                       IconButton(
                         onPressed: () {
                           setState(() {
-                            (item['urlCtrl'] as TextEditingController).dispose();
+                            (item['urlCtrl'] as TextEditingController)
+                                .dispose();
                             _affiliateLinks.removeAt(index);
                           });
                         },
-                        icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
+                        icon: const Icon(Icons.delete_outline,
+                            color: Colors.redAccent),
                       )
                     ],
                   ),
@@ -412,11 +456,14 @@ class _AddProductViewState extends State<AddProductView> {
                     controller: item['urlCtrl'],
                     decoration: InputDecoration(
                       hintText: 'Enter Product Link',
-                      hintStyle: const TextStyle(color: Color(0xFFB0B3C6), fontSize: 14),
-                      prefixIcon: const Icon(Icons.link, size: 20, color: Colors.grey),
+                      hintStyle: const TextStyle(
+                          color: Color(0xFFB0B3C6), fontSize: 14),
+                      prefixIcon:
+                          const Icon(Icons.link, size: 20, color: Colors.grey),
                       filled: true,
                       fillColor: Colors.white,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 16),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(color: Colors.grey.shade300),
@@ -427,7 +474,8 @@ class _AddProductViewState extends State<AddProductView> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Color(0xFF6B4EFF), width: 1.5),
+                        borderSide: const BorderSide(
+                            color: Color(0xFF6B4EFF), width: 1.5),
                       ),
                     ),
                   )
@@ -447,11 +495,14 @@ class _AddProductViewState extends State<AddProductView> {
             });
           },
           icon: const Icon(Icons.add, color: Color(0xFF6B4EFF)),
-          label: const Text('Add Another Link', style: TextStyle(color: Color(0xFF6B4EFF), fontWeight: FontWeight.bold)),
+          label: const Text('Add Another Link',
+              style: TextStyle(
+                  color: Color(0xFF6B4EFF), fontWeight: FontWeight.bold)),
           style: TextButton.styleFrom(
             backgroundColor: const Color(0xFF6B4EFF).withOpacity(0.1),
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
         ),
       ],

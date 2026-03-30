@@ -1,7 +1,6 @@
 import 'package:deal_bridge_app/app/modules/home/views/widghts/platform_grid.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../controllers/home_controller.dart';
 import 'widghts/product_grid.dart';
 import 'widghts/category_widget.dart';
@@ -64,7 +63,7 @@ class HomeView extends GetView<HomeController> {
                     hintStyle: TextStyle(color: Color(0xFFB0B3C6)),
                     prefixIcon: Icon(Icons.search, color: Color(0xFF6B4EFF)),
                     suffixIcon: Tooltip(
-                      message: 'Press Enter to search on Amazon',
+                      message: 'Search products',
                       child:
                           Icon(Icons.travel_explore, color: Color(0x806B4EFF)),
                     ),
@@ -74,20 +73,8 @@ class HomeView extends GetView<HomeController> {
                   ),
                   textInputAction: TextInputAction.search,
                   onChanged: (value) => controller.setSearchQuery(value),
-                  onSubmitted: (query) async {
-                    if (query.trim().isNotEmpty) {
-                      const String affiliateTag = 'dealbridge0d-21';
-                      final Uri url = Uri.parse(
-                          'https://www.amazon.in/s?k=${Uri.encodeComponent(query)}&tag=$affiliateTag');
-                      if (await canLaunchUrl(url)) {
-                        await launchUrl(
-                          url,
-                          mode: LaunchMode.inAppBrowserView,
-                        );
-                      } else {
-                        Get.snackbar('Error', 'Could not open Amazon search');
-                      }
-                    }
+                  onSubmitted: (query) {
+                    controller.setSearchQuery(query);
                   },
                 ),
               ),

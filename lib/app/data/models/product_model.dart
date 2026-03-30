@@ -19,6 +19,7 @@ class AffiliateLinkModel {
 class ProductModel {
   final String? id;
   final String title;
+  final double mrp;
   final double price;
   final String category;
   final String image;
@@ -31,6 +32,7 @@ class ProductModel {
   ProductModel({
     this.id,
     required this.title,
+    required this.mrp,
     required this.price,
     required this.category,
     required this.image,
@@ -44,6 +46,7 @@ class ProductModel {
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
         id: json['_id'],
         title: json['title'] ?? '',
+        mrp: (json['mrp'] ?? json['price'] ?? 0).toDouble(),
         price: (json['price'] ?? 0).toDouble(),
         category: json['category'] ?? '',
         image: json['image'] ?? '',
@@ -59,6 +62,7 @@ class ProductModel {
 
   Map<String, dynamic> toJson() => {
         'title': title,
+        'mrp': mrp,
         'price': price,
         'category': category,
         'image': image,

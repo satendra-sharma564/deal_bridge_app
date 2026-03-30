@@ -28,7 +28,8 @@ class VersionService {
   static const String _baseUrl = 'https://dealbridge-backend.onrender.com/api';
 
   /// Returns null if up-to-date, or [VersionCheckResult] if update required.
-  static Future<VersionCheckResult?> checkForUpdate(String currentVersion) async {
+  static Future<VersionCheckResult?> checkForUpdate(
+      String currentVersion) async {
     try {
       final response = await http
           .get(Uri.parse('$_baseUrl/version'))

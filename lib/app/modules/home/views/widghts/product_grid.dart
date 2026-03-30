@@ -85,15 +85,62 @@ class ProductGrid extends StatelessWidget {
                         const SizedBox(height: 8),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Text(
-                              '₹${product.price.toInt()}',
-                              style: const TextStyle(
-                                  color: Color(0xFF1E212D),
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  if (product.mrp > product.price)
+                                    Wrap(
+                                      crossAxisAlignment:
+                                          WrapCrossAlignment.center,
+                                      spacing: 4,
+                                      children: [
+                                        Text(
+                                          '₹${product.mrp.toInt()}',
+                                          style: const TextStyle(
+                                            color: Colors.grey,
+                                            decoration:
+                                                TextDecoration.lineThrough,
+                                            fontSize: 11,
+                                            height: 1.0,
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 4, vertical: 2),
+                                          decoration: BoxDecoration(
+                                            color: Colors.red.shade50,
+                                            borderRadius:
+                                                BorderRadius.circular(4),
+                                          ),
+                                          child: Text(
+                                            '${((product.mrp - product.price) / product.mrp * 100).toInt()}% OFF',
+                                            style: const TextStyle(
+                                              color: Colors.red,
+                                              fontSize: 9,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  if (product.mrp > product.price)
+                                    const SizedBox(height: 2),
+                                  Text(
+                                    '₹${product.price.toInt()}',
+                                    style: const TextStyle(
+                                        color: Color(0xFF1E212D),
+                                        fontWeight: FontWeight.w900,
+                                        fontSize: 16,
+                                        height: 1.0),
+                                  ),
+                                ],
+                              ),
                             ),
                             Container(
+                              margin: const EdgeInsets.only(bottom: 2),
                               padding: const EdgeInsets.all(4),
                               decoration: const BoxDecoration(
                                 color: Color(0xFFF0EDFF),

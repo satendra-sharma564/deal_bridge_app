@@ -20,7 +20,8 @@ class _AddPlatformViewState extends State<AddPlatformView> {
   final TextEditingController _nameCtrl = TextEditingController();
   final TextEditingController _logoCtrl = TextEditingController();
   final TextEditingController _linkCtrl = TextEditingController();
-  final TextEditingController _colorCtrl = TextEditingController(text: "#ffffff");
+  final TextEditingController _colorCtrl =
+      TextEditingController(text: "#ffffff");
 
   // Logo source toggle
   bool _useUrlForLogo = true;
@@ -135,7 +136,8 @@ class _AddPlatformViewState extends State<AddPlatformView> {
 
     bool success;
     if (widget.platformToEdit != null) {
-      success = await controller.updatePlatform(widget.platformToEdit!.id, data);
+      success =
+          await controller.updatePlatform(widget.platformToEdit!.id, data);
     } else {
       success = await controller.addPlatform(data);
     }
@@ -270,9 +272,10 @@ class _AddPlatformViewState extends State<AddPlatformView> {
                   width: double.infinity,
                   height: 56,
                   child: Obx(() => ElevatedButton(
-                        onPressed: controller.isLoading.value || _isUploadingImage
-                            ? null
-                            : _submitPlatform,
+                        onPressed:
+                            controller.isLoading.value || _isUploadingImage
+                                ? null
+                                : _submitPlatform,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF6B4EFF),
                           shape: RoundedRectangleBorder(
@@ -331,7 +334,8 @@ class _AddPlatformViewState extends State<AddPlatformView> {
                   children: [
                     CircularProgressIndicator(color: Color(0xFF6B4EFF)),
                     SizedBox(height: 10),
-                    Text('Uploading...', style: TextStyle(color: Color(0xFF6B4EFF))),
+                    Text('Uploading...',
+                        style: TextStyle(color: Color(0xFF6B4EFF))),
                   ],
                 ),
               )
@@ -352,7 +356,8 @@ class _AddPlatformViewState extends State<AddPlatformView> {
                         top: 8,
                         right: 8,
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
                             color: Colors.green,
                             borderRadius: BorderRadius.circular(20),
@@ -362,7 +367,9 @@ class _AddPlatformViewState extends State<AddPlatformView> {
                             children: [
                               Icon(Icons.check, color: Colors.white, size: 14),
                               SizedBox(width: 4),
-                              Text('Uploaded', style: TextStyle(color: Colors.white, fontSize: 12)),
+                              Text('Uploaded',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 12)),
                             ],
                           ),
                         ),
@@ -373,16 +380,20 @@ class _AddPlatformViewState extends State<AddPlatformView> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(Icons.add_photo_alternate_rounded,
-                          size: 40, color: const Color(0xFF6B4EFF).withOpacity(0.6)),
+                          size: 40,
+                          color: const Color(0xFF6B4EFF).withOpacity(0.6)),
                       const SizedBox(height: 8),
                       const Text(
                         'Tap to pick from Gallery',
-                        style: TextStyle(color: Color(0xFF6B4EFF), fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                            color: Color(0xFF6B4EFF),
+                            fontWeight: FontWeight.w600),
                       ),
                       const SizedBox(height: 4),
                       const Text(
                         'PNG, JPG supported',
-                        style: TextStyle(color: Color(0xFFB0B3C6), fontSize: 12),
+                        style:
+                            TextStyle(color: Color(0xFFB0B3C6), fontSize: 12),
                       ),
                     ],
                   ),
@@ -396,7 +407,8 @@ class _AddPlatformViewState extends State<AddPlatformView> {
       padding: const EdgeInsets.only(top: 12),
       child: Row(
         children: [
-          const Text('Preview: ', style: TextStyle(color: Color(0xFF4A4E69), fontSize: 13)),
+          const Text('Preview: ',
+              style: TextStyle(color: Color(0xFF4A4E69), fontSize: 13)),
           const SizedBox(width: 8),
           Container(
             width: 50,

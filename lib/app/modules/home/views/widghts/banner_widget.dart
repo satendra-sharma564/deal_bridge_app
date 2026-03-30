@@ -17,19 +17,22 @@ class _BannerWidgetState extends State<BannerWidget> {
     {
       'title': 'Mega Sale Live!',
       'subtitle': 'Up to 80% off on top electronics.',
-      'image': 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=2070&auto=format&fit=crop',
+      'image':
+          'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=2070&auto=format&fit=crop',
       'button': 'Shop Now'
     },
     {
       'title': 'Fashion Week',
       'subtitle': 'Exclusive styles & big discounts.',
-      'image': 'https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070&auto=format&fit=crop',
+      'image':
+          'https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070&auto=format&fit=crop',
       'button': 'Grab Deals'
     },
     {
       'title': 'Daily Steals',
       'subtitle': 'Lowest prices of the day.',
-      'image': 'https://images.unsplash.com/photo-1603539947678-cd3954ed515d?q=80&w=1974&auto=format&fit=crop',
+      'image':
+          'https://images.unsplash.com/photo-1603539947678-cd3954ed515d?q=80&w=1974&auto=format&fit=crop',
       'button': 'View Offers'
     },
   ];
@@ -129,7 +132,8 @@ class _BannerWidgetState extends State<BannerWidget> {
                       ),
                       const Spacer(),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
                         decoration: BoxDecoration(
                           color: const Color(0xFF6B4EFF),
                           borderRadius: BorderRadius.circular(12),
@@ -162,7 +166,9 @@ class _BannerWidgetState extends State<BannerWidget> {
               height: 6,
               width: _currentPage == index ? 20 : 6,
               decoration: BoxDecoration(
-                color: _currentPage == index ? const Color(0xFF6B4EFF) : Colors.grey.shade300,
+                color: _currentPage == index
+                    ? const Color(0xFF6B4EFF)
+                    : Colors.grey.shade300,
                 borderRadius: BorderRadius.circular(10),
               ),
             ),

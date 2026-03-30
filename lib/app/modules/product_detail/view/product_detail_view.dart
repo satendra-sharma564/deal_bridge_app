@@ -145,8 +145,7 @@ class ProductDetailView extends StatelessWidget {
               final linkStr = product.affiliateLink ?? product.link;
               if (linkStr != null && linkStr.isNotEmpty) {
                 final Uri linkUri = Uri.parse(linkStr);
-                if (!await launchUrl(linkUri,
-                    mode: LaunchMode.inAppWebView)) {
+                if (!await launchUrl(linkUri, mode: LaunchMode.inAppWebView)) {
                   Get.rawSnackbar(message: 'Could not launch Amazon Link');
                 }
               } else {
