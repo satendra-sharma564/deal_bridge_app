@@ -37,14 +37,14 @@ void main() async {
   runApp(
     GetMaterialApp(
       title: 'Deal Bridge',
-      // initialRoute: AppPages.INITIAL,
-      // getPages: AppPages.routes,
-
-      initialRoute: Routes.ADMIN,
+      initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
 
+      // initialRoute: Routes.ADMIN,
+      // getPages: AppPages.routes,
+
       theme: ThemeData(
-        fontFamily: 'Inter', // Optional, nice fallback
+        fontFamily: 'Inter', // Optional, nice fallback1
         primarySwatch: Colors.blue,
         scaffoldBackgroundColor: Colors.grey[100],
         appBarTheme: const AppBarTheme(
