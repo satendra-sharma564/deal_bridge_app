@@ -1,6 +1,8 @@
 import 'package:deal_bridge_app/app/modules/home/views/widghts/platform_grid.dart';
+import 'package:deal_bridge_app/app/modules/admin/controllers/admin_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../controllers/home_controller.dart';
 import 'widghts/product_grid.dart';
 import 'widghts/category_widget.dart';
@@ -107,13 +109,59 @@ class HomeView extends GetView<HomeController> {
                 );
               }
               if (controller.filteredProducts.isEmpty) {
-                return const SliverToBoxAdapter(
+                return SliverToBoxAdapter(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 40),
+                    padding: const EdgeInsets.symmetric(vertical: 40),
                     child: Center(
-                      child: Text(
-                        'No products found matching your criteria.',
-                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text(
+                            'No products found matching your criteria.',
+                            style: TextStyle(fontSize: 16, color: Colors.grey),
+                          ),
+                          const SizedBox(height: 16),
+                          if (controller.searchQuery.value.trim().isNotEmpty)
+                            Builder(
+                              builder: (context) {
+                                final adminCtrl = Get.put(AdminController());
+                                return Obx(() {
+                                  if (adminCtrl.platformList.isEmpty) return const SizedBox();
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                    child: Wrap(
+                                      spacing: 8,
+                                      runSpacing: 8,
+                                      alignment: WrapAlignment.center,
+                                      children: adminCtrl.platformList.map((platform) {
+                                        return ActionChip(
+                                          avatar: const Icon(Icons.travel_explore, size: 16, color: Colors.white),
+                                          label: Text('Search on ${platform.name}'),
+                                          backgroundColor: const Color(0xFF6B4EFF),
+                                          labelStyle: const TextStyle(color: Colors.white),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(12),
+                                          ),
+                                          side: const BorderSide(color: Colors.transparent),
+                                          onPressed: () async {
+                                            final Uri url = Uri.parse(platform.link);
+                                            if (await canLaunchUrl(url)) {
+                                              await launchUrl(
+                                                url,
+                                                mode: LaunchMode.inAppWebView,
+                                              );
+                                            } else {
+                                              Get.snackbar('Error', 'Could not open platform');
+                                            }
+                                          },
+                                        );
+                                      }).toList(),
+                                    ),
+                                  );
+                                });
+                              }
+                            ),
+                        ],
                       ),
                     ),
                   ),
