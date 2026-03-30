@@ -6,7 +6,7 @@ import '../../../routes/app_pages.dart';
 
 /// Current installed app version — must match pubspec.yaml version string
 const String kAppVersion =
-    '1.0.1'; // ← Update this every time you release new APK
+    '1.0.2'; // ← Update this every time you release new APK
 
 class SplashController extends GetxController {
   final RxBool isChecking = true.obs;
