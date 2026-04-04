@@ -129,9 +129,7 @@ class HomeView extends GetView<HomeController> {
                               fontWeight: FontWeight.w700,
                               color: Color(0xFF1E212D)),
                         ),
-                        if (controller.searchQuery.value
-                            .trim()
-                            .isNotEmpty) ...[
+                        if (controller.searchQuery.value.trim().isNotEmpty) ...[
                           const SizedBox(height: 4),
                           Padding(
                             padding:
@@ -145,7 +143,7 @@ class HomeView extends GetView<HomeController> {
                           ),
                           const SizedBox(height: 20),
 
-                          // ── Amazon Affiliate Button ──────────────
+                          // ── Amazon Affiliate Button (direct search with aff tag) ──
                           Material(
                             color: const Color(0xFFFFF8EC),
                             borderRadius: BorderRadius.circular(16),
@@ -169,7 +167,6 @@ class HomeView extends GetView<HomeController> {
                                     horizontal: 16, vertical: 14),
                                 child: Row(
                                   children: [
-                                    // Amazon logo
                                     Container(
                                       width: 44,
                                       height: 44,
@@ -187,15 +184,12 @@ class HomeView extends GetView<HomeController> {
                                           fit: BoxFit.contain,
                                           errorWidget: (_, __, ___) =>
                                               const Icon(
-                                                  Icons
-                                                      .shopping_cart_outlined,
-                                                  color:
-                                                      Color(0xFFFD9000)),
+                                                  Icons.shopping_cart_outlined,
+                                                  color: Color(0xFFFD9000)),
                                         ),
                                       ),
                                     ),
                                     const SizedBox(width: 14),
-                                    // Label
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
@@ -206,11 +200,9 @@ class HomeView extends GetView<HomeController> {
                                               const Text(
                                                 'Amazon',
                                                 style: TextStyle(
-                                                  fontWeight:
-                                                      FontWeight.w800,
+                                                  fontWeight: FontWeight.w800,
                                                   fontSize: 15,
-                                                  color:
-                                                      Color(0xFF1E212D),
+                                                  color: Color(0xFF1E212D),
                                                 ),
                                               ),
                                               const SizedBox(width: 8),
@@ -220,19 +212,17 @@ class HomeView extends GetView<HomeController> {
                                                         horizontal: 8,
                                                         vertical: 2),
                                                 decoration: BoxDecoration(
-                                                  color: const Color(
-                                                      0xFFFD9000),
+                                                  color:
+                                                      const Color(0xFFFD9000),
                                                   borderRadius:
-                                                      BorderRadius.circular(
-                                                          20),
+                                                      BorderRadius.circular(20),
                                                 ),
                                                 child: const Text(
                                                   '🏷️ Affiliate',
                                                   style: TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 10,
-                                                    fontWeight:
-                                                        FontWeight.w700,
+                                                    fontWeight: FontWeight.w700,
                                                   ),
                                                 ),
                                               ),
@@ -248,7 +238,6 @@ class HomeView extends GetView<HomeController> {
                                         ],
                                       ),
                                     ),
-                                    // Arrow
                                     Container(
                                       padding: const EdgeInsets.all(8),
                                       decoration: const BoxDecoration(
@@ -268,19 +257,17 @@ class HomeView extends GetView<HomeController> {
 
                           const SizedBox(height: 12),
 
-                          // ── Platforms jin mein product available hai ──
+                          // ── Other platforms — EarnKaro affiliate links use karo ──
                           Builder(
                             builder: (context) {
-                              // Sirf ye 5 platforms hi dikhne chahiye
+                              // Sirf ye platforms allowed hain
                               const allowedPlatforms = {
-                                'amazon',
                                 'flipkart',
                                 'myntra',
                                 'ajio',
                                 'reliance digital',
                               };
                               final adminCtrl = Get.put(AdminController());
-                              // DB mein matching platforms dhundho
                               final matchedNames = controller
                                   .getPlatformNamesForQuery(
                                       controller.searchQuery.value);
@@ -290,30 +277,25 @@ class HomeView extends GetView<HomeController> {
                                 }
                                 final bool hasDbMatch =
                                     matchedNames.isNotEmpty;
-                                // Case-insensitive fuzzy match + whitelist filter
                                 final matchedNamesLower = matchedNames
                                     .map((n) => n.toLowerCase())
                                     .toSet();
-                                // Step 1: whitelist se filter karo
-                                // Step 2: agar DB match hai toh sirf woh
-                                final platformsToShow = adminCtrl.platformList
-                                    .where((p) {
-                                      final pLower =
-                                          p.name.toLowerCase();
-                                      // Whitelist check
-                                      final inWhitelist = allowedPlatforms
-                                          .any((a) =>
-                                              pLower.contains(a) ||
-                                              a.contains(pLower));
-                                      if (!inWhitelist) return false;
-                                      // DB match filter
-                                      if (!hasDbMatch) return true;
-                                      return matchedNamesLower.any(
-                                          (mn) =>
-                                              mn.contains(pLower) ||
-                                              pLower.contains(mn));
-                                    })
-                                    .toList();
+
+                                final platformsToShow =
+                                    adminCtrl.platformList.where((p) {
+                                  final pLower = p.name.toLowerCase();
+                                  // Whitelist check (amazon alag button hai)
+                                  final inWhitelist = allowedPlatforms.any(
+                                      (a) =>
+                                          pLower.contains(a) ||
+                                          a.contains(pLower));
+                                  if (!inWhitelist) return false;
+                                  // DB match filter
+                                  if (!hasDbMatch) return true;
+                                  return matchedNamesLower.any((mn) =>
+                                      mn.contains(pLower) ||
+                                      pLower.contains(mn));
+                                }).toList();
 
                                 if (platformsToShow.isEmpty) {
                                   return const SizedBox();
@@ -362,12 +344,14 @@ class HomeView extends GetView<HomeController> {
                                           side: const BorderSide(
                                               color: Colors.transparent),
                                           onPressed: () async {
+                                            // platform.link = EarnKaro affiliate link
+                                            // Directly open karo — commission track hoga
                                             final Uri url =
                                                 Uri.parse(platform.link);
                                             if (await canLaunchUrl(url)) {
                                               await launchUrl(url,
-                                                  mode: LaunchMode
-                                                      .inAppWebView);
+                                                  mode:
+                                                      LaunchMode.inAppWebView);
                                             } else {
                                               Get.snackbar('Error',
                                                   'Could not open platform');
