@@ -1,5 +1,6 @@
 import 'package:deal_bridge_app/app/modules/home/views/widghts/platform_grid.dart';
 import 'package:deal_bridge_app/app/modules/admin/controllers/admin_controller.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -8,13 +9,15 @@ import 'widghts/product_grid.dart';
 import 'widghts/category_widget.dart';
 import 'widghts/banner_widget.dart';
 
+const String _amazonAffTag = 'dealbridge0d-21';
+
 class HomeView extends GetView<HomeController> {
   const HomeView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F8FA), // Light modern background
+      backgroundColor: const Color(0xFFF7F8FA),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -111,58 +114,275 @@ class HomeView extends GetView<HomeController> {
               if (controller.filteredProducts.isEmpty) {
                 return SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 40),
-                    child: Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Text(
-                            'No products found matching your criteria.',
-                            style: TextStyle(fontSize: 16, color: Colors.grey),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 32, horizontal: 0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.search_off_rounded,
+                            size: 52, color: Color(0xFFB0B3C6)),
+                        const SizedBox(height: 12),
+                        const Text(
+                          'Koi product nahi mila',
+                          style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF1E212D)),
+                        ),
+                        if (controller.searchQuery.value
+                            .trim()
+                            .isNotEmpty) ...[
+                          const SizedBox(height: 4),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 24),
+                            child: Text(
+                              '"${controller.searchQuery.value.trim()}" – yahan dhundho:',
+                              style: const TextStyle(
+                                  fontSize: 13, color: Colors.grey),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
-                          const SizedBox(height: 16),
-                          if (controller.searchQuery.value.trim().isNotEmpty)
-                            Builder(
-                              builder: (context) {
-                                final adminCtrl = Get.put(AdminController());
-                                return Obx(() {
-                                  if (adminCtrl.platformList.isEmpty) return const SizedBox();
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                                    child: Wrap(
+                          const SizedBox(height: 20),
+
+                          // ── Amazon Affiliate Button ──────────────
+                          Material(
+                            color: const Color(0xFFFFF8EC),
+                            borderRadius: BorderRadius.circular(16),
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(16),
+                              onTap: () async {
+                                final q = Uri.encodeComponent(
+                                    controller.searchQuery.value.trim());
+                                final Uri uri = Uri.parse(
+                                    'https://www.amazon.in/s?k=$q&tag=$_amazonAffTag');
+                                if (await canLaunchUrl(uri)) {
+                                  await launchUrl(uri,
+                                      mode: LaunchMode.inAppWebView);
+                                } else {
+                                  Get.snackbar(
+                                      'Error', 'Amazon open nahi ho saka');
+                                }
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 14),
+                                child: Row(
+                                  children: [
+                                    // Amazon logo
+                                    Container(
+                                      width: 44,
+                                      height: 44,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius:
+                                            BorderRadius.circular(12),
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(12),
+                                        child: CachedNetworkImage(
+                                          imageUrl:
+                                              'https://logo.clearbit.com/amazon.in',
+                                          fit: BoxFit.contain,
+                                          errorWidget: (_, __, ___) =>
+                                              const Icon(
+                                                  Icons
+                                                      .shopping_cart_outlined,
+                                                  color:
+                                                      Color(0xFFFD9000)),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 14),
+                                    // Label
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              const Text(
+                                                'Amazon',
+                                                style: TextStyle(
+                                                  fontWeight:
+                                                      FontWeight.w800,
+                                                  fontSize: 15,
+                                                  color:
+                                                      Color(0xFF1E212D),
+                                                ),
+                                              ),
+                                              const SizedBox(width: 8),
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 8,
+                                                        vertical: 2),
+                                                decoration: BoxDecoration(
+                                                  color: const Color(
+                                                      0xFFFD9000),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          20),
+                                                ),
+                                                child: const Text(
+                                                  '🏷️ Affiliate',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 10,
+                                                    fontWeight:
+                                                        FontWeight.w700,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 2),
+                                          const Text(
+                                            'Amazon par search karein',
+                                            style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.grey),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    // Arrow
+                                    Container(
+                                      padding: const EdgeInsets.all(8),
+                                      decoration: const BoxDecoration(
+                                        color: Color(0xFFFD9000),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: const Icon(
+                                          Icons.arrow_forward_ios,
+                                          size: 12,
+                                          color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 12),
+
+                          // ── Platforms jin mein product available hai ──
+                          Builder(
+                            builder: (context) {
+                              // Sirf ye 5 platforms hi dikhne chahiye
+                              const allowedPlatforms = {
+                                'amazon',
+                                'flipkart',
+                                'myntra',
+                                'ajio',
+                                'reliance digital',
+                              };
+                              final adminCtrl = Get.put(AdminController());
+                              // DB mein matching platforms dhundho
+                              final matchedNames = controller
+                                  .getPlatformNamesForQuery(
+                                      controller.searchQuery.value);
+                              return Obx(() {
+                                if (adminCtrl.platformList.isEmpty) {
+                                  return const SizedBox();
+                                }
+                                final bool hasDbMatch =
+                                    matchedNames.isNotEmpty;
+                                // Case-insensitive fuzzy match + whitelist filter
+                                final matchedNamesLower = matchedNames
+                                    .map((n) => n.toLowerCase())
+                                    .toSet();
+                                // Step 1: whitelist se filter karo
+                                // Step 2: agar DB match hai toh sirf woh
+                                final platformsToShow = adminCtrl.platformList
+                                    .where((p) {
+                                      final pLower =
+                                          p.name.toLowerCase();
+                                      // Whitelist check
+                                      final inWhitelist = allowedPlatforms
+                                          .any((a) =>
+                                              pLower.contains(a) ||
+                                              a.contains(pLower));
+                                      if (!inWhitelist) return false;
+                                      // DB match filter
+                                      if (!hasDbMatch) return true;
+                                      return matchedNamesLower.any(
+                                          (mn) =>
+                                              mn.contains(pLower) ||
+                                              pLower.contains(mn));
+                                    })
+                                    .toList();
+
+                                if (platformsToShow.isEmpty) {
+                                  return const SizedBox();
+                                }
+
+                                return Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 4, bottom: 8),
+                                      child: Text(
+                                        hasDbMatch
+                                            ? 'Yeh platforms mein milega:'
+                                            : 'In platforms par search karein:',
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.grey,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                    Wrap(
                                       spacing: 8,
                                       runSpacing: 8,
                                       alignment: WrapAlignment.center,
-                                      children: adminCtrl.platformList.map((platform) {
+                                      children:
+                                          platformsToShow.map((platform) {
                                         return ActionChip(
-                                          avatar: const Icon(Icons.travel_explore, size: 16, color: Colors.white),
-                                          label: Text('Search on ${platform.name}'),
-                                          backgroundColor: const Color(0xFF6B4EFF),
-                                          labelStyle: const TextStyle(color: Colors.white),
+                                          avatar: const Icon(
+                                              Icons.travel_explore,
+                                              size: 16,
+                                              color: Colors.white),
+                                          label: Text(hasDbMatch
+                                              ? 'Open on ${platform.name}'
+                                              : 'Search on ${platform.name}'),
+                                          backgroundColor:
+                                              const Color(0xFF6B4EFF),
+                                          labelStyle: const TextStyle(
+                                              color: Colors.white),
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(12),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
                                           ),
-                                          side: const BorderSide(color: Colors.transparent),
+                                          side: const BorderSide(
+                                              color: Colors.transparent),
                                           onPressed: () async {
-                                            final Uri url = Uri.parse(platform.link);
+                                            final Uri url =
+                                                Uri.parse(platform.link);
                                             if (await canLaunchUrl(url)) {
-                                              await launchUrl(
-                                                url,
-                                                mode: LaunchMode.inAppWebView,
-                                              );
+                                              await launchUrl(url,
+                                                  mode: LaunchMode
+                                                      .inAppWebView);
                                             } else {
-                                              Get.snackbar('Error', 'Could not open platform');
+                                              Get.snackbar('Error',
+                                                  'Could not open platform');
                                             }
                                           },
                                         );
                                       }).toList(),
                                     ),
-                                  );
-                                });
-                              }
-                            ),
+                                  ],
+                                );
+                              });
+                            },
+                          ),
                         ],
-                      ),
+                      ],
                     ),
                   ),
                 );

@@ -64,4 +64,23 @@ class HomeController extends GetxController {
 
     return filtered;
   }
+
+  /// Search ALL products (ignoring category filter) for [query] and return
+  /// the Set of platform names whose affiliate links are in those products.
+  Set<String> getPlatformNamesForQuery(String query) {
+    if (query.trim().isEmpty) return {};
+    final q = query.trim().toLowerCase();
+    final Set<String> platforms = {};
+    for (final product in productList) {
+      if (product.title.toLowerCase().contains(q) ||
+          product.category.toLowerCase().contains(q)) {
+        for (final link in product.links) {
+          if (link.platform.trim().isNotEmpty) {
+            platforms.add(link.platform.trim());
+          }
+        }
+      }
+    }
+    return platforms;
+  }
 }

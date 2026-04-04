@@ -37,11 +37,11 @@ void main() async {
   runApp(
     GetMaterialApp(
       title: 'Deal Bridge',
-      initialRoute: AppPages.INITIAL,
-      getPages: AppPages.routes,
-
-      // initialRoute: Routes.ADMIN,
+      // initialRoute: AppPages.INITIAL,
       // getPages: AppPages.routes,
+
+      initialRoute: Routes.ADMIN,
+      getPages: AppPages.routes,
 
       theme: ThemeData(
         fontFamily: 'Inter', // Optional, nice fallback1

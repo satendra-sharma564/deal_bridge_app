@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:deal_bridge_app/app/data/models/product_model.dart';
 
+const String _amazonAffiliateTag = 'dealbridge0d-21';
+
 class PlatformBottomSheet extends StatelessWidget {
   final ProductModel product;
 
@@ -215,10 +217,10 @@ class PlatformBottomSheet extends StatelessWidget {
           // ── Platform list ────────────────────────────
           if (product.links.isEmpty)
             const Padding(
-              padding: EdgeInsets.all(20.0),
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 4),
               child: Text(
-                'No affiliate links available for this product.',
-                style: TextStyle(color: Colors.grey, fontSize: 14),
+                'Is platform par koi link nahi hai.',
+                style: TextStyle(color: Colors.grey, fontSize: 13),
               ),
             )
           else
@@ -342,6 +344,121 @@ class PlatformBottomSheet extends StatelessWidget {
                 );
               },
             ),
+
+          // ── Amazon Affiliate Button ──────────────────
+          const SizedBox(height: 12),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Material(
+              color: const Color(0xFFFFF8EC),
+              borderRadius: BorderRadius.circular(16),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(16),
+                onTap: () async {
+                  Navigator.pop(context);
+                  final linkStr =
+                      (product.affiliateLink?.isNotEmpty == true)
+                          ? product.affiliateLink!
+                          : null;
+                  final Uri uri = linkStr != null
+                      ? Uri.parse(linkStr)
+                      : Uri.parse(
+                          'https://www.amazon.in/s?k=${Uri.encodeComponent(product.title)}&tag=$_amazonAffiliateTag',
+                        );
+                  if (await canLaunchUrl(uri)) {
+                    await launchUrl(uri, mode: LaunchMode.inAppWebView);
+                  } else {
+                    Get.snackbar('Error', 'Amazon link open nahi ho saka');
+                  }
+                },
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  child: Row(
+                    children: [
+                      // Amazon logo
+                      Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: CachedNetworkImage(
+                            imageUrl: 'https://logo.clearbit.com/amazon.in',
+                            fit: BoxFit.contain,
+                            errorWidget: (_, __, ___) => const Icon(
+                                Icons.shopping_cart_outlined,
+                                color: Color(0xFFFD9000)),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 14),
+                      // Text
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                const Text(
+                                  'Amazon',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 15,
+                                    color: Color(0xFF1E212D),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFFD9000),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: const Text(
+                                    '🏷️ Affiliate',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              (product.affiliateLink?.isNotEmpty == true)
+                                  ? 'Direct affiliate link ready'
+                                  : 'Amazon par search karein',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // Arrow
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: const BoxDecoration(
+                          color: Color(0xFFFD9000),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.arrow_forward_ios,
+                            size: 12, color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
 
           // Bottom safe area
           SizedBox(height: MediaQuery.of(context).padding.bottom + 16),
