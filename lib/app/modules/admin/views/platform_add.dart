@@ -23,6 +23,9 @@ class _AddPlatformViewState extends State<AddPlatformView> {
   final TextEditingController _colorCtrl =
       TextEditingController(text: "#ffffff");
 
+  final TextEditingController _categoryCtrl =
+      TextEditingController(text: "General");
+
   // Logo source toggle
   bool _useUrlForLogo = true;
   File? _pickedImage;
@@ -37,6 +40,7 @@ class _AddPlatformViewState extends State<AddPlatformView> {
       _logoCtrl.text = widget.platformToEdit!.logo;
       _linkCtrl.text = widget.platformToEdit!.link;
       _colorCtrl.text = widget.platformToEdit!.color;
+      _categoryCtrl.text = widget.platformToEdit!.category;
     }
   }
 
@@ -46,6 +50,7 @@ class _AddPlatformViewState extends State<AddPlatformView> {
     _logoCtrl.dispose();
     _linkCtrl.dispose();
     _colorCtrl.dispose();
+    _categoryCtrl.dispose();
     super.dispose();
   }
 
@@ -132,6 +137,7 @@ class _AddPlatformViewState extends State<AddPlatformView> {
       "logo": logoUrl,
       "link": _linkCtrl.text.trim(),
       "color": _colorCtrl.text.trim(),
+      "category": _categoryCtrl.text.trim().isEmpty ? "General" : _categoryCtrl.text.trim(),
     };
 
     bool success;
@@ -255,6 +261,15 @@ class _AddPlatformViewState extends State<AddPlatformView> {
                   hint: 'https://earnkro.com/...',
                   icon: Icons.link_rounded,
                   controller: _linkCtrl,
+                ),
+                const SizedBox(height: 20),
+
+                // Category Input
+                _buildSectionTitle('Platform Category'),
+                _buildTextField(
+                  hint: 'e.g. General, Fashion, Electronics...',
+                  icon: Icons.label_outline_rounded,
+                  controller: _categoryCtrl,
                 ),
                 const SizedBox(height: 20),
 

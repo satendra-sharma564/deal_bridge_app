@@ -29,6 +29,7 @@ class PlatformModel {
   final String logo;
   final String link;
   final String color;
+  final String category; // New field
 
   PlatformModel({
     required this.id,
@@ -36,6 +37,7 @@ class PlatformModel {
     required this.logo,
     required this.link,
     required this.color,
+    this.category = 'General',
   });
 
   factory PlatformModel.fromJson(Map<String, dynamic> json) {
@@ -45,6 +47,7 @@ class PlatformModel {
       logo: json['logo'] ?? "https://via.placeholder.com/100",
       link: json['link'] ?? "",
       color: json['color'] ?? "#ffffff",
+      category: json['category']?.toString() ?? 'General',
     );
   }
 }

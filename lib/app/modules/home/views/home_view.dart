@@ -1,4 +1,3 @@
-import 'package:deal_bridge_app/app/modules/home/views/widghts/platform_grid.dart';
 import 'package:deal_bridge_app/app/modules/admin/controllers/admin_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +7,7 @@ import '../controllers/home_controller.dart';
 import 'widghts/product_grid.dart';
 import 'widghts/category_widget.dart';
 import 'widghts/banner_widget.dart';
+import 'widghts/platform_grid.dart';
 
 const String _amazonAffTag = 'dealbridge0d-21';
 
@@ -92,10 +92,13 @@ class HomeView extends GetView<HomeController> {
             ),
           ),
           const SliverPadding(
-            padding: EdgeInsets.only(top: 16.0, bottom: 24.0),
+            padding: EdgeInsets.only(top: 16.0, bottom: 12.0),
             sliver: SliverToBoxAdapter(
               child: CategoryWidget(),
             ),
+          ),
+          SliverToBoxAdapter(
+            child: _PlatformCategorySection(),
           ),
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -512,5 +515,261 @@ class HomeView extends GetView<HomeController> {
         ],
       ),
     );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+// Platform Category Section — richly designed, interesing UI
+// ─────────────────────────────────────────────────────────────
+class _PlatformCategorySection extends StatefulWidget {
+  @override
+  State<_PlatformCategorySection> createState() =>
+      _PlatformCategorySectionState();
+}
+
+class _PlatformCategorySectionState extends State<_PlatformCategorySection> {
+  String _selectedCategory = 'All';
+
+  // Category icons map
+  static const Map<String, String> _catEmoji = {
+    'All': '🌐',
+    'Fashion': '👗',
+    'Electronics': '💻',
+    'Grocery': '🛒',
+    'Beauty': '💄',
+    'Sports': '⚽',
+    'Home & Kitchen': '🏠',
+    'General': '🏪',
+  };
+
+  // Per-platform accent color fallback
+  Color _accentFor(String name) {
+    final n = name.toLowerCase();
+    if (n.contains('amazon')) return const Color(0xFFFD9000);
+    if (n.contains('flipkart')) return const Color(0xFF2874F0);
+    if (n.contains('myntra')) return const Color(0xFFFF3F6C);
+    if (n.contains('ajio')) return const Color(0xFF1A1A1A);
+    if (n.contains('reliance')) return const Color(0xFF0078D7);
+    if (n.contains('meesho')) return const Color(0xFFE91E8C);
+    return const Color(0xFF6B4EFF);
+  }
+
+  String _logoFor(String name) {
+    final n = name.toLowerCase();
+    if (n.contains('amazon')) return 'https://logo.clearbit.com/amazon.in';
+    if (n.contains('flipkart')) return 'https://logo.clearbit.com/flipkart.com';
+    if (n.contains('myntra')) return 'https://logo.clearbit.com/myntra.com';
+    if (n.contains('ajio')) return 'https://logo.clearbit.com/ajio.com';
+    if (n.contains('reliance')) {
+      return 'https://logo.clearbit.com/reliancedigital.in';
+    }
+    if (n.contains('meesho')) return 'https://logo.clearbit.com/meesho.com';
+    return 'https://logo.clearbit.com/${n.replaceAll(' ', '')}.com';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final adminCtrl = Get.put(AdminController());
+    return Obx(() {
+      final platforms = adminCtrl.platformList;
+      if (platforms.isEmpty) return const SizedBox();
+
+      // Unique categories from data
+      final categories = <String>['All'];
+      for (final p in platforms) {
+        if (!categories.contains(p.category)) {
+          categories.add(p.category);
+        }
+      }
+
+      // Filtered list
+      final filtered = _selectedCategory == 'All'
+          ? platforms
+          : platforms.where((p) => p.category == _selectedCategory).toList();
+
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // ── Header & Dropdown ──────────────────────────
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Top Platforms',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xFF1E212D),
+                    letterSpacing: -0.5,
+                  ),
+                ),
+                Container(
+                  height: 38,
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF9FAFF),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: const Color(0xFF6B4EFF).withOpacity(0.3),
+                      width: 1.5,
+                    ),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      value: _selectedCategory,
+                      icon: const Padding(
+                        padding: EdgeInsets.only(left: 4),
+                        child: Icon(Icons.keyboard_arrow_down_rounded,
+                            size: 20, color: Color(0xFF6B4EFF)),
+                      ),
+                      elevation: 4,
+                      borderRadius: BorderRadius.circular(16),
+                      style: const TextStyle(
+                        color: Color(0xFF6B4EFF),
+                        fontWeight: FontWeight.w700,
+                        fontSize: 13,
+                      ),
+                      dropdownColor: Colors.white,
+                      items: categories.map((cat) {
+                        final emoji = _catEmoji[cat] ?? '🏪';
+                        return DropdownMenuItem(
+                          value: cat,
+                          child: Text('$emoji  $cat'),
+                        );
+                      }).toList(),
+                      onChanged: (val) {
+                        if (val != null) {
+                          setState(() => _selectedCategory = val);
+                        }
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 14),
+
+          // ── Horizontal platform cards ─────────────────
+          SizedBox(
+            height: 130,
+            child: filtered.isEmpty
+                ? const Center(
+                    child: Text('No platforms in this category',
+                        style: TextStyle(color: Colors.grey)))
+                : ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: filtered.length,
+                    itemBuilder: (context, i) {
+                      final p = filtered[i];
+                      final accent = _accentFor(p.name);
+                      final logo = p.logo.isNotEmpty &&
+                              !p.logo.contains('placeholder')
+                          ? p.logo
+                          : _logoFor(p.name);
+                      return GestureDetector(
+                        onTap: () async {
+                          final uri = Uri.parse(p.link);
+                          if (await canLaunchUrl(uri)) {
+                            await launchUrl(uri,
+                                mode: LaunchMode.inAppWebView);
+                          }
+                        },
+                        child: Container(
+                          width: 110,
+                          margin: const EdgeInsets.only(right: 12),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: accent.withOpacity(0.12),
+                                blurRadius: 12,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              // Logo circle with gradient ring
+                              Container(
+                                width: 60,
+                                height: 60,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      accent.withOpacity(0.15),
+                                      accent.withOpacity(0.05),
+                                    ],
+                                  ),
+                                  border: Border.all(
+                                    color: accent.withOpacity(0.3),
+                                    width: 2,
+                                  ),
+                                ),
+                                child: ClipOval(
+                                  child: CachedNetworkImage(
+                                    imageUrl: logo,
+                                    fit: BoxFit.contain,
+                                    errorWidget: (_, __, ___) => Icon(
+                                        Icons.store_rounded,
+                                        color: accent,
+                                        size: 28),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              // Name
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 6),
+                                child: Text(
+                                  p.name,
+                                  textAlign: TextAlign.center,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xFF1E212D),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              // Category badge
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: accent.withOpacity(0.12),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                  p.category,
+                                  style: TextStyle(
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.w600,
+                                    color: accent,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+          ),
+
+          const SizedBox(height: 32),
+        ],
+      );
+    });
   }
 }
