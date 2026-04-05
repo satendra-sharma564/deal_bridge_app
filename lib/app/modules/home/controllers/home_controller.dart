@@ -10,6 +10,7 @@ class HomeController extends GetxController {
   var selectedCategory = 'All'.obs;
   var searchQuery = ''.obs;
   var isLoading = true.obs;
+  var isProductsExpanded = false.obs;
 
   @override
   void onInit() {
@@ -40,10 +41,12 @@ class HomeController extends GetxController {
 
   void selectCategory(String categoryName) {
     selectedCategory.value = categoryName;
+    isProductsExpanded.value = false;
   }
 
   void setSearchQuery(String query) {
     searchQuery.value = query;
+    isProductsExpanded.value = false;
   }
 
   List<ProductModel> get filteredProducts {

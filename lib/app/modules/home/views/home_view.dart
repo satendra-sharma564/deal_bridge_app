@@ -490,8 +490,54 @@ class HomeView extends GetView<HomeController> {
                     ),
                   ),
                 );
+              } // Added missing closing brace
+              final fullList = controller.filteredProducts;
+              final displayList = !controller.isProductsExpanded.value &&
+                      fullList.length > 8
+                  ? fullList.take(8).toList()
+                  : fullList;
+              return ProductGrid(products: displayList);
+            }),
+          ),
+          SliverToBoxAdapter(
+            child: Obx(() {
+              final fullList = controller.filteredProducts;
+              if (!controller.isProductsExpanded.value && fullList.length > 8) {
+                return Padding(
+                  padding: const EdgeInsets.only(top: 8.0, bottom: 24.0),
+                  child: Center(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        controller.isProductsExpanded.value = true;
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: const Color(0xFF6B4EFF),
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          side: const BorderSide(
+                              color: Color(0xFF6B4EFF), width: 1.2),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 28, vertical: 12),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text("View All Products (${fullList.length})",
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold)),
+                          const SizedBox(width: 8),
+                          const Icon(Icons.keyboard_arrow_down_rounded,
+                              size: 20),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
               }
-              return ProductGrid(products: controller.filteredProducts);
+              return const SizedBox.shrink();
             }),
           ),
           const SliverPadding(
