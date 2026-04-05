@@ -114,8 +114,8 @@ class HomeView extends GetView<HomeController> {
               if (controller.filteredProducts.isEmpty) {
                 return SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 32, horizontal: 0),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 32, horizontal: 0),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -132,8 +132,7 @@ class HomeView extends GetView<HomeController> {
                         if (controller.searchQuery.value.trim().isNotEmpty) ...[
                           const SizedBox(height: 4),
                           Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 24),
+                            padding: const EdgeInsets.symmetric(horizontal: 24),
                             child: Text(
                               '"${controller.searchQuery.value.trim()}" – yahan dhundho:',
                               style: const TextStyle(
@@ -172,12 +171,10 @@ class HomeView extends GetView<HomeController> {
                                       height: 44,
                                       decoration: BoxDecoration(
                                         color: Colors.white,
-                                        borderRadius:
-                                            BorderRadius.circular(12),
+                                        borderRadius: BorderRadius.circular(12),
                                       ),
                                       child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(12),
+                                        borderRadius: BorderRadius.circular(12),
                                         child: CachedNetworkImage(
                                           imageUrl:
                                               'https://logo.clearbit.com/amazon.in',
@@ -244,10 +241,8 @@ class HomeView extends GetView<HomeController> {
                                         color: Color(0xFFFD9000),
                                         shape: BoxShape.circle,
                                       ),
-                                      child: const Icon(
-                                          Icons.arrow_forward_ios,
-                                          size: 12,
-                                          color: Colors.white),
+                                      child: const Icon(Icons.arrow_forward_ios,
+                                          size: 12, color: Colors.white),
                                     ),
                                   ],
                                 ),
@@ -260,7 +255,6 @@ class HomeView extends GetView<HomeController> {
                           // ── Other platforms — EarnKaro affiliate links use karo ──
                           Builder(
                             builder: (context) {
-                              // Sirf ye platforms allowed hain
                               const allowedPlatforms = {
                                 'flipkart',
                                 'myntra',
@@ -268,15 +262,14 @@ class HomeView extends GetView<HomeController> {
                                 'reliance digital',
                               };
                               final adminCtrl = Get.put(AdminController());
-                              final matchedNames = controller
-                                  .getPlatformNamesForQuery(
+                              final matchedNames =
+                                  controller.getPlatformNamesForQuery(
                                       controller.searchQuery.value);
                               return Obx(() {
                                 if (adminCtrl.platformList.isEmpty) {
                                   return const SizedBox();
                                 }
-                                final bool hasDbMatch =
-                                    matchedNames.isNotEmpty;
+                                final bool hasDbMatch = matchedNames.isNotEmpty;
                                 final matchedNamesLower = matchedNames
                                     .map((n) => n.toLowerCase())
                                     .toSet();
@@ -284,13 +277,11 @@ class HomeView extends GetView<HomeController> {
                                 final platformsToShow =
                                     adminCtrl.platformList.where((p) {
                                   final pLower = p.name.toLowerCase();
-                                  // Whitelist check (amazon alag button hai)
                                   final inWhitelist = allowedPlatforms.any(
                                       (a) =>
                                           pLower.contains(a) ||
                                           a.contains(pLower));
                                   if (!inWhitelist) return false;
-                                  // DB match filter
                                   if (!hasDbMatch) return true;
                                   return matchedNamesLower.any((mn) =>
                                       mn.contains(pLower) ||
@@ -301,51 +292,64 @@ class HomeView extends GetView<HomeController> {
                                   return const SizedBox();
                                 }
 
+                                // Platform accent colors
+                                Color accentFor(String name) {
+                                  final n = name.toLowerCase();
+                                  if (n.contains('flipkart')) {
+                                    return const Color(0xFF2874F0);
+                                  } else if (n.contains('myntra')) {
+                                    return const Color(0xFFFF3F6C);
+                                  } else if (n.contains('ajio')) {
+                                    return const Color(0xFF1A1A1A);
+                                  } else if (n.contains('reliance')) {
+                                    return const Color(0xFF0078D7);
+                                  }
+                                  return const Color(0xFF6B4EFF);
+                                }
+
+                                Color bgFor(String name) {
+                                  final n = name.toLowerCase();
+                                  if (n.contains('flipkart')) {
+                                    return const Color(0xFFEAF2FF);
+                                  } else if (n.contains('myntra')) {
+                                    return const Color(0xFFFFECF1);
+                                  } else if (n.contains('ajio')) {
+                                    return const Color(0xFFF2F2F2);
+                                  } else if (n.contains('reliance')) {
+                                    return const Color(0xFFE6F3FF);
+                                  }
+                                  return const Color(0xFFF0EDFF);
+                                }
+
+                                String logoFor(String name) {
+                                  final n = name.toLowerCase();
+                                  if (n.contains('flipkart')) {
+                                    return 'https://logo.clearbit.com/flipkart.com';
+                                  } else if (n.contains('myntra')) {
+                                    return 'https://logo.clearbit.com/myntra.com';
+                                  } else if (n.contains('ajio')) {
+                                    return 'https://logo.clearbit.com/ajio.com';
+                                  } else if (n.contains('reliance')) {
+                                    return 'https://logo.clearbit.com/reliancedigital.in';
+                                  }
+                                  return 'https://logo.clearbit.com/${name.toLowerCase().replaceAll(' ', '')}.com';
+                                }
+
                                 return Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 4, bottom: 8),
-                                      child: Text(
-                                        hasDbMatch
-                                            ? 'Yeh platforms mein milega:'
-                                            : 'In platforms par search karein:',
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                    Wrap(
-                                      spacing: 8,
-                                      runSpacing: 8,
-                                      alignment: WrapAlignment.center,
-                                      children:
-                                          platformsToShow.map((platform) {
-                                        return ActionChip(
-                                          avatar: const Icon(
-                                              Icons.travel_explore,
-                                              size: 16,
-                                              color: Colors.white),
-                                          label: Text(hasDbMatch
-                                              ? 'Open on ${platform.name}'
-                                              : 'Search on ${platform.name}'),
-                                          backgroundColor:
-                                              const Color(0xFF6B4EFF),
-                                          labelStyle: const TextStyle(
-                                              color: Colors.white),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                          ),
-                                          side: const BorderSide(
-                                              color: Colors.transparent),
-                                          onPressed: () async {
-                                            // platform.link = EarnKaro affiliate link
-                                            // Directly open karo — commission track hoga
+                                  children: platformsToShow.map((platform) {
+                                    final accent = accentFor(platform.name);
+                                    final bg = bgFor(platform.name);
+                                    final logo = logoFor(platform.name);
+                                    return Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 10),
+                                      child: Material(
+                                        color: bg,
+                                        borderRadius: BorderRadius.circular(16),
+                                        child: InkWell(
+                                          borderRadius:
+                                              BorderRadius.circular(16),
+                                          onTap: () async {
                                             final Uri url =
                                                 Uri.parse(platform.link);
                                             if (await canLaunchUrl(url)) {
@@ -357,10 +361,123 @@ class HomeView extends GetView<HomeController> {
                                                   'Could not open platform');
                                             }
                                           },
-                                        );
-                                      }).toList(),
-                                    ),
-                                  ],
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 16, vertical: 14),
+                                            child: Row(
+                                              children: [
+                                                // Platform logo
+                                                Container(
+                                                  width: 44,
+                                                  height: 44,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12),
+                                                  ),
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12),
+                                                    child: CachedNetworkImage(
+                                                      imageUrl: logo,
+                                                      fit: BoxFit.contain,
+                                                      errorWidget:
+                                                          (_, __, ___) => Icon(
+                                                              Icons
+                                                                  .shopping_bag_outlined,
+                                                              color: accent),
+                                                    ),
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 14),
+                                                // Name + badge + subtitle
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          Text(
+                                                            platform.name,
+                                                            style:
+                                                                const TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w800,
+                                                              fontSize: 15,
+                                                              color: Color(
+                                                                  0xFF1E212D),
+                                                            ),
+                                                          ),
+                                                          const SizedBox(
+                                                              width: 8),
+                                                          Container(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .symmetric(
+                                                                    horizontal:
+                                                                        8,
+                                                                    vertical:
+                                                                        2),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: accent,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          20),
+                                                            ),
+                                                            // child: const Text(
+                                                            //   '🔗 EarnKaro',
+                                                            //   style:
+                                                            //       TextStyle(
+                                                            //     color: Colors
+                                                            //         .white,
+                                                            //     fontSize: 10,
+                                                            //     fontWeight:
+                                                            //         FontWeight
+                                                            //             .w700,
+                                                            //   ),
+                                                            // ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      const SizedBox(height: 2),
+                                                      Text(
+                                                        hasDbMatch
+                                                            ? '${platform.name} par milega'
+                                                            : '${platform.name} par search karein',
+                                                        style: const TextStyle(
+                                                            fontSize: 12,
+                                                            color: Colors.grey),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                // Arrow button
+                                                Container(
+                                                  padding:
+                                                      const EdgeInsets.all(8),
+                                                  decoration: BoxDecoration(
+                                                    color: accent,
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: const Icon(
+                                                      Icons.arrow_forward_ios,
+                                                      size: 12,
+                                                      color: Colors.white),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
                                 );
                               });
                             },
