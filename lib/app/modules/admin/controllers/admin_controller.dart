@@ -20,7 +20,7 @@ class AdminController extends GetxController {
     fetchCategories();
   }
 
-  void fetchProducts() async {
+  Future<void> fetchProducts() async {
     try {
       isLoading(true);
       var products = await _apiService.getProducts();
@@ -80,7 +80,7 @@ class AdminController extends GetxController {
     }
   }
 
-  void fetchPlatforms() async {
+  Future<void> fetchPlatforms() async {
     try {
       isLoading(true);
       var platforms = await _apiService.getPlatforms();
@@ -154,7 +154,7 @@ class AdminController extends GetxController {
   }
 
   // ── Categories ───────────────────────────────────────────
-  void fetchCategories() async {
+  Future<void> fetchCategories() async {
     try {
       var categories = await _apiService.getCategories();
       categoryList
@@ -190,17 +190,46 @@ class AdminController extends GetxController {
     }
   }
 
-  Future<void> deleteCategory(String id) async {
-    bool success = await _apiService.deleteCategory(id);
-    if (success) {
-      Get.snackbar('Deleted', 'Category has been removed.',
+  Future<void> deleteCategory(String id, String categoryName) async {
+    isSaving(true);
+    try {
+      // Step 1: Reassign all platforms with this category to "General"
+      final platformsToUpdate = platformList
+          .where((p) => p.category.trim().toLowerCase() ==
+              categoryName.trim().toLowerCase())
+          .toList();
+
+      for (final platform in platformsToUpdate) {
+        await _apiService.updatePlatform(platform.id, {
+          "name": platform.name,
+          "logo": platform.logo,
+          "link": platform.link,
+          "color": platform.color,
+          "category": "General",
+        });
+      }
+
+      // Step 2: Delete the category
+      bool success = await _apiService.deleteCategory(id);
+      if (success) {
+        await fetchPlatforms(); // refresh platforms with new "General" category
+        fetchCategories();
+        Get.snackbar(
+          'Deleted ✅',
+          platformsToUpdate.isEmpty
+              ? 'Category removed.'
+              : '${platformsToUpdate.length} platform(s) moved to "General".',
           backgroundColor: const Color(0xFF4CAF50),
-          colorText: const Color(0xFFFFFFFF));
-      fetchCategories();
-    } else {
-      Get.snackbar('Error', 'Failed to delete category.',
-          backgroundColor: const Color(0xFFE53935),
-          colorText: const Color(0xFFFFFFFF));
+          colorText: const Color(0xFFFFFFFF),
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      } else {
+        Get.snackbar('Error', 'Failed to delete category.',
+            backgroundColor: const Color(0xFFE53935),
+            colorText: const Color(0xFFFFFFFF));
+      }
+    } finally {
+      isSaving(false);
     }
   }
 }

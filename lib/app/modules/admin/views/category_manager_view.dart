@@ -64,24 +64,80 @@ class CategoryManagerView extends StatelessWidget {
   }
 
   void _confirmDelete(BuildContext context, CategoryModel cat) {
+    // Count how many platforms use this category
+    final affectedCount = controller.platformList
+        .where((p) =>
+            p.category.trim().toLowerCase() == cat.name.trim().toLowerCase())
+        .length;
+
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('Delete Category'),
-        content: Text('Are you sure you want to delete "${cat.name}"?'),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Row(
+          children: [
+            Icon(Icons.warning_amber_rounded, color: Colors.red, size: 22),
+            SizedBox(width: 8),
+            Text('Delete Category',
+                style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Are you sure you want to delete "${cat.name}"?'),
+            if (affectedCount > 0) ...[
+              const SizedBox(height: 12),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                decoration: BoxDecoration(
+                  color: Colors.orange.shade50,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.orange.shade200),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.info_outline,
+                        color: Colors.orange.shade700, size: 18),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        '$affectedCount platform(s) will be moved to "General" category.',
+                        style: TextStyle(
+                            color: Colors.orange.shade800, fontSize: 13),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ],
+        ),
         actions: [
           TextButton(
             onPressed: () => Get.back(),
             child: const Text('Cancel'),
           ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            onPressed: () {
-              controller.deleteCategory(cat.id);
-              Get.back();
-            },
-            child: const Text('Delete', style: TextStyle(color: Colors.white)),
-          ),
+          Obx(() => ElevatedButton(
+                style:
+                    ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                onPressed: controller.isSaving.value
+                    ? null
+                    : () {
+                        Get.back();
+                        controller.deleteCategory(cat.id, cat.name);
+                      },
+                child: controller.isSaving.value
+                    ? const SizedBox(
+                        height: 16,
+                        width: 16,
+                        child: CircularProgressIndicator(
+                            strokeWidth: 2, color: Colors.white))
+                    : const Text('Delete',
+                        style: TextStyle(color: Colors.white)),
+              )),
         ],
       ),
     );
