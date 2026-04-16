@@ -266,11 +266,7 @@ class _AddPlatformViewState extends State<AddPlatformView> {
 
                 // Category Input
                 _buildSectionTitle('Platform Category'),
-                _buildTextField(
-                  hint: 'e.g. General, Fashion, Electronics...',
-                  icon: Icons.label_outline_rounded,
-                  controller: _categoryCtrl,
-                ),
+                _buildCategorySelector(),
                 const SizedBox(height: 20),
 
                 // Theme Color
@@ -511,6 +507,119 @@ class _AddPlatformViewState extends State<AddPlatformView> {
           borderSide: const BorderSide(color: Color(0xFF6B4EFF), width: 1.5),
         ),
       ),
+    );
+  }
+
+  Widget _buildCategorySelector() {
+    // Combine categories from platformList + categoryList, deduplicate
+    final Set<String> categoryNames = {};
+
+    // From platform categories
+    for (final p in controller.platformList) {
+      final cat = p.category.trim();
+      if (cat.isNotEmpty) categoryNames.add(cat);
+    }
+    // From dedicated category list
+    for (final c in controller.categoryList) {
+      final cat = c.name.trim();
+      if (cat.isNotEmpty) categoryNames.add(cat);
+    }
+
+    final sortedCategories = categoryNames.toList()..sort();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Manual text input
+        TextField(
+          controller: _categoryCtrl,
+          onChanged: (_) => setState(() {}),
+          decoration: InputDecoration(
+            hintText: 'e.g. General, Fashion, Electronics...',
+            hintStyle: const TextStyle(color: Color(0xFFB0B3C6)),
+            prefixIcon: Icon(
+              Icons.label_outline_rounded,
+              color: const Color(0xFF6B4EFF).withOpacity(0.7),
+            ),
+            filled: true,
+            fillColor: const Color(0xFFF9FAFF),
+            contentPadding: const EdgeInsets.symmetric(vertical: 16),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide.none,
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide:
+                  const BorderSide(color: Color(0xFF6B4EFF), width: 1.5),
+            ),
+          ),
+        ),
+
+        // Existing category chips
+        if (sortedCategories.isNotEmpty) ...
+          [
+            const SizedBox(height: 10),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: sortedCategories.map((cat) {
+                final isSelected =
+                    _categoryCtrl.text.trim().toLowerCase() ==
+                        cat.toLowerCase();
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _categoryCtrl.text = cat;
+                    });
+                  },
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 180),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 14, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? const Color(0xFF6B4EFF)
+                          : const Color(0xFFF0EDFF),
+                      borderRadius: BorderRadius.circular(30),
+                      border: Border.all(
+                        color: isSelected
+                            ? const Color(0xFF6B4EFF)
+                            : const Color(0xFF6B4EFF).withOpacity(0.25),
+                        width: 1.2,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          isSelected
+                              ? Icons.check_circle_rounded
+                              : Icons.label_rounded,
+                          size: 14,
+                          color: isSelected
+                              ? Colors.white
+                              : const Color(0xFF6B4EFF),
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          cat,
+                          style: TextStyle(
+                            color: isSelected
+                                ? Colors.white
+                                : const Color(0xFF6B4EFF),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ],
+      ],
     );
   }
 }
