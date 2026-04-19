@@ -1,5 +1,6 @@
 import 'package:deal_bridge_app/app/modules/admin/views/platform_add.dart';
 import 'package:deal_bridge_app/app/modules/admin/views/category_manager_view.dart';
+import 'package:deal_bridge_app/app/modules/admin/views/send_notification_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -38,6 +39,8 @@ class AdminDashboardView extends GetView<AdminController> {
                 Get.to(() => const AddProductView());
               } else if (value == 'platform') {
                 Get.to(() => AddPlatformView());
+              } else if (value == 'notification') {
+                Get.to(() => const SendNotificationView());
               }
             },
             itemBuilder: (context) => [
@@ -70,6 +73,18 @@ class AdminDashboardView extends GetView<AdminController> {
                     Icon(Icons.storefront, color: Color(0xFF6B4EFF), size: 20),
                     SizedBox(width: 12),
                     Text('Add Platform',
+                        style: TextStyle(fontWeight: FontWeight.w600)),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
+                value: 'notification',
+                child: Row(
+                  children: const [
+                    Icon(Icons.notifications_active_rounded,
+                        color: Color(0xFF6B4EFF), size: 20),
+                    SizedBox(width: 12),
+                    Text('Send Notification',
                         style: TextStyle(fontWeight: FontWeight.w600)),
                   ],
                 ),

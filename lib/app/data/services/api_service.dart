@@ -203,4 +203,26 @@ class ApiService {
     }
     return false;
   }
+
+  // ── Notifications ─────────────────────────────────────────
+  Future<bool> sendNotification(String title, String body) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/notifications/send'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'title': title,
+          'body': body,
+          'topic': 'all_users',
+        }),
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      }
+      print('Notification API error: ${response.statusCode} ${response.body}');
+    } catch (e) {
+      print('Error sending notification: $e');
+    }
+    return false;
+  }
 }
